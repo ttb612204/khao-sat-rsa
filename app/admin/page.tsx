@@ -141,7 +141,7 @@ export default function AdminPage() {
           <Popconfirm 
             title="Xóa bản ghi này?" 
             description="Dữ liệu sẽ bị xóa vĩnh viễn khỏi server."
-            onConfirm={() => handleDelete(record.submittedAt)}
+            onConfirm={() => handleDelete(record.id)}
           >
             <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
@@ -194,7 +194,7 @@ export default function AdminPage() {
           columns={columns} 
           dataSource={filteredData} 
           loading={loading}
-          rowKey="submittedAt"
+          rowKey="id"
           pagination={{ pageSize: 10, showTotal: (total) => `Tổng số ${total} bản ghi` }}
         />
       </Card>

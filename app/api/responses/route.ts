@@ -1,44 +1,48 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { supabase } from '@/utils/supabase';
 
-const filePath = path.join(process.cwd(), 'responses.json');
-
-// LẤY DANH SÁCH TOÀN BỘ CÂU TRẢ LỜI
+// LẤY DANH SÁCH TOÀN BỘ CÂU TRẢ LỜI TỪ SUPABASE
 export async function GET() {
   try {
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json([], { status: 200 });
-    }
+    const { data, error } = await supabase
+      .from('responses')
+      .select('*')
+      .order('submitted_at', { ascending: false });
 
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const data = JSON.parse(fileContent || '[]');
+    if (error) throw error;
+
+    // Map lại cấu hình để admin page dễ đọc (giải nén cột data)
+    const formattedData = data.map(item => ({
+      ...item.data,
+      id: item.id,
+      submittedAt: item.submitted_at
+    }));
     
-    return NextResponse.json(data, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: 'Lỗi khi lấy dữ liệu' }, { status: 500 });
+    return NextResponse.json(formattedData, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: 'Lỗi khi lấy dữ liệu: ' + error.message }, { status: 500 });
   }
 }
 
-// XÓA MỘT BẢN GHI (Dựa trên submittedAt hoặc một ID duy nhất)
+// XÓA MỘT BẢN GHI KHỎI SUPABASE
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id'); // Ở đây ta dùng submittedAt làm ID tạm thời
+    const id = searchParams.get('id');
 
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ message: 'Không tìm thấy dữ liệu' }, { status: 404 });
+    if (!id) {
+      return NextResponse.json({ message: 'Thiếu ID bản ghi' }, { status: 400 });
     }
 
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    let data = JSON.parse(fileContent || '[]');
-    
-    data = data.filter((item: any) => item.submittedAt !== id);
+    const { error } = await supabase
+      .from('responses')
+      .delete()
+      .eq('id', id); // Sử dụng UUID 'id' chính xác
 
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    if (error) throw error;
     
     return NextResponse.json({ message: 'Xóa thành công' }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: 'Lỗi khi xóa dữ liệu' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ message: 'Lỗi khi xóa dữ liệu: ' + error.message }, { status: 500 });
   }
 }
