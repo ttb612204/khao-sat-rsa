@@ -22,7 +22,6 @@ import { loadDraft, clearDraft, saveDraft } from '@/utils/storage';
 export default function SurveyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reviewVisible, setReviewVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
   const router = useRouter();
 
   const {
@@ -41,7 +40,6 @@ export default function SurveyPage() {
       q19: [],
       q20: [],
       q21: DEFAULT_CONTACT_POINTS.map((field) => ({
-        key: field,
         field,
         name: '',
         position: '',
@@ -51,37 +49,40 @@ export default function SurveyPage() {
     },
   });
 
-  // Load draft on mount
+  // Load draft on mount and ensure q21 has all 6 sectors
   useEffect(() => {
     const draft = loadDraft();
     if (draft) {
-      reset(draft);
+      // Merge draft with default sectors if missing
+      const mergedDraft = { ...draft };
+      if (mergedDraft.q21) {
+        const existingFields = mergedDraft.q21.map((item: any) => item.field);
+        const missingFields = DEFAULT_CONTACT_POINTS.filter(f => !existingFields.includes(f));
+        
+        if (missingFields.length > 0) {
+          mergedDraft.q21 = [
+            ...mergedDraft.q21,
+            ...missingFields.map(field => ({
+              field,
+              name: '',
+              position: '',
+              phoneEmail: ''
+            }))
+          ];
+          // Sort to match original order
+          mergedDraft.q21.sort((a: any, b: any) => 
+            DEFAULT_CONTACT_POINTS.indexOf(a.field) - DEFAULT_CONTACT_POINTS.indexOf(b.field)
+          );
+        }
+      }
+      
+      reset(mergedDraft);
       message.success('Đã khôi phục bản nháp gần nhất');
     }
   }, [reset]);
 
   // Autosave
   useSurveyAutosave(watch);
-
-  // Progress Calculation
-  const formValues = watch();
-  useEffect(() => {
-    const totalQuestions = QUESTIONS.length + 1; // +1 for Section 4
-    let answered = 0;
-    
-    QUESTIONS.forEach(q => {
-      const val = formValues[q.id as keyof SurveySchemaType];
-      if (Array.isArray(val) ? val.length > 0 : (val && val !== '')) {
-        answered++;
-      }
-    });
-    
-    if (formValues.q21 && formValues.q21.some(cp => cp.name || cp.phoneEmail)) {
-      answered++;
-    }
-
-    setProgress(Math.round((answered / totalQuestions) * 100));
-  }, [formValues]);
 
   const onSubmit = async (data: SurveySchemaType) => {
     setIsSubmitting(true);
@@ -108,7 +109,7 @@ export default function SurveyPage() {
 
   return (
     <main className="survey-container">
-      <SurveyHeader progress={progress} />
+      <SurveyHeader control={control} />
 
       <Form layout="vertical">
         <AnimatePresence>
@@ -174,9 +175,23 @@ export default function SurveyPage() {
           message.success('Đã lưu bản nháp');
         }}
         onReset={() => {
-          reset();
+          reset({
+            q6: [],
+            q13: [],
+            q14: [],
+            q15: [],
+            q19: [],
+            q20: [],
+            q21: DEFAULT_CONTACT_POINTS.map((field) => ({
+              field,
+              name: '',
+              position: '',
+              phoneEmail: '',
+            })),
+            q23: [],
+          } as any);
           clearDraft();
-          message.info('Đã xóa toàn bộ dữ liệu');
+          message.info('Đã xóa toàn bộ dữ liệu và khôi phục mặc định');
         }}
         onReview={() => setReviewVisible(true)}
         onSubmit={handleSubmit(onSubmit)}

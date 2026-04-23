@@ -2,17 +2,17 @@
 
 :root {
   --primary-gradient: linear-gradient(135deg, #002766 0%, #1677ff 100%);
-  --bg-gradient: radial-gradient(circle at top left, #f0f5ff 0%, #ffffff 50%, #e6f7ff 100%);
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --bg-gradient: radial-gradient(circle at top left, #fff1f0 0%, #ffffff 50%, #fff8f7 100%);
+  --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(255, 255, 255, 0.4);
-  --shadow-premium: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-premium: 0 8px 32px 0 rgba(135, 31, 31, 0.07);
 }
 
 body {
-  background: var(--bg-gradient);
+  background: #fff1f0; /* Soft light red background */
   background-attachment: fixed;
   color: #1f1f1f;
-  font-family: 'Outfit', -apple-system, sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   min-height: 100vh;
   margin: 0;
 }
@@ -57,11 +57,11 @@ body {
 
 .header-title {
   font-size: 2.8rem !important;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ff4d4f !important;
+  -webkit-text-fill-color: #ff4d4f !important;
   margin-bottom: 12px !important;
   font-weight: 800 !important;
+  font-family: 'Times New Roman', Times, serif !important;
 }
 
 /* Premium Buttons */

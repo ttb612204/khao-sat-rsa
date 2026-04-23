@@ -1,16 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography, Progress } from 'antd';
-import { SURVEY_TITLE, SURVEY_SUBTITLE } from '@/constants/survey';
+import { useWatch } from 'react-hook-form';
+import { SURVEY_TITLE, SURVEY_SUBTITLE, QUESTIONS } from '@/constants/survey';
 
 const { Title, Text } = Typography;
 
 interface SurveyHeaderProps {
-  progress: number;
+  control: any;
 }
 
-const SurveyHeader: React.FC<SurveyHeaderProps> = ({ progress }) => {
+const SurveyHeader: React.FC<SurveyHeaderProps> = ({ control }) => {
+  // Watch all values to calculate progress
+  const allValues = useWatch({ control });
+
+  const progress = useMemo(() => {
+    const totalQuestions = QUESTIONS.length + 1; // +1 for Section 4
+    let answered = 0;
+    
+    if (!allValues) return 0;
+
+    QUESTIONS.forEach(q => {
+      const val = allValues[q.id];
+      if (Array.isArray(val) ? val.length > 0 : (val && val !== '')) {
+        answered++;
+      }
+    });
+    
+    if (allValues.q21 && Array.isArray(allValues.q21) && allValues.q21.some((cp: any) => cp.name || cp.phoneEmail)) {
+      answered++;
+    }
+
+    return Math.round((answered / totalQuestions) * 100);
+  }, [allValues]);
+
   return (
     <header className="header-container">
       <Title level={1} className="header-title">
