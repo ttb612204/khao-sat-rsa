@@ -16,7 +16,7 @@ import ReviewDrawer from '@/components/survey/ReviewDrawer';
 
 import { QUESTIONS, SECTIONS, DEFAULT_CONTACT_POINTS } from '@/constants/survey';
 import { surveySchema, SurveySchemaType } from '@/schemas/survey.schema';
-import { useSurveyAutosave } from '@/hooks/useSurveyAutosave';
+
 import { loadDraft, clearDraft, saveDraft } from '@/utils/storage';
 
 export default function SurveyPage() {
@@ -81,8 +81,7 @@ export default function SurveyPage() {
     }
   }, [reset]);
 
-  // Autosave
-  useSurveyAutosave(watch);
+
 
   const onSubmit = async (data: SurveySchemaType) => {
     setIsSubmitting(true);
