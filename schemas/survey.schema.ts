@@ -4,7 +4,8 @@ export const contactPointSchema = z.object({
   field: z.string(),
   name: z.string().optional(),
   position: z.string().optional(),
-  phoneEmail: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
 });
 
 export const surveySchema = z.object({

@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'rsa_survey_draft';
 const STORAGE_VERSION_KEY = 'rsa_survey_version';
-const CURRENT_VERSION = '1.0.2'; // Tăng version mỗi khi thay đổi cấu trúc form
+const CURRENT_VERSION = '1.0.3'; // Tăng version mỗi khi thay đổi cấu trúc form
 
 export const saveDraft = (data: any) => {
   if (typeof window !== 'undefined') {

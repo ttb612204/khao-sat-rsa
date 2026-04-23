@@ -16,7 +16,6 @@ import ReviewDrawer from '@/components/survey/ReviewDrawer';
 
 import { QUESTIONS, SECTIONS, DEFAULT_CONTACT_POINTS } from '@/constants/survey';
 import { surveySchema, SurveySchemaType } from '@/schemas/survey.schema';
-
 import { loadDraft, clearDraft, saveDraft } from '@/utils/storage';
 
 export default function SurveyPage() {
@@ -43,7 +42,8 @@ export default function SurveyPage() {
         field,
         name: '',
         position: '',
-        phoneEmail: '',
+        phone: '',
+        email: '',
       })),
       q23: [],
     },
@@ -66,7 +66,8 @@ export default function SurveyPage() {
               field,
               name: '',
               position: '',
-              phoneEmail: ''
+              phone: '',
+              email: ''
             }))
           ];
           // Sort to match original order
@@ -80,8 +81,6 @@ export default function SurveyPage() {
       message.success('Đã khôi phục bản nháp gần nhất');
     }
   }, [reset]);
-
-
 
   const onSubmit = async (data: SurveySchemaType) => {
     setIsSubmitting(true);
@@ -185,7 +184,8 @@ export default function SurveyPage() {
               field,
               name: '',
               position: '',
-              phoneEmail: '',
+              phone: '',
+              email: '',
             })),
             q23: [],
           } as any);

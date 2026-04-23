@@ -65,19 +65,35 @@ const ContactTableSection: React.FC<ContactTableSectionProps> = ({ control }) =>
               )}
             />
           </div>
-          <div>
-            <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: 4 }}>SĐT và Email:</Text>
-            <Controller
-              name={`q21.${index}.phoneEmail`}
-              control={control}
-              render={({ field: inputField }) => (
-                <Input
-                  {...inputField}
-                  placeholder="Nhập số điện thoại và email liên hệ"
-                  style={{ borderRadius: '8px' }}
-                />
-              )}
-            />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: 4 }}>Số điện thoại:</Text>
+              <Controller
+                name={`q21.${index}.phone`}
+                control={control}
+                render={({ field: inputField }) => (
+                  <Input
+                    {...inputField}
+                    placeholder="Nhập SĐT"
+                    style={{ borderRadius: '8px' }}
+                  />
+                )}
+              />
+            </div>
+            <div>
+              <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: 4 }}>Email:</Text>
+              <Controller
+                name={`q21.${index}.email`}
+                control={control}
+                render={({ field: inputField }) => (
+                  <Input
+                    {...inputField}
+                    placeholder="Nhập email"
+                    style={{ borderRadius: '8px' }}
+                  />
+                )}
+              />
+            </div>
           </div>
         </Space>
       ),
