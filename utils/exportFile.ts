@@ -9,7 +9,6 @@ import {
   TableRow, 
   TableCell, 
   WidthType,
-  BorderStyle,
   AlignmentType
 } from 'docx';
 import { saveAs } from 'file-saver';
@@ -20,20 +19,17 @@ import { QUESTIONS, SECTIONS, SURVEY_TITLE } from '@/constants/survey';
  * EXPORT TO EXCEL
  */
 export const exportToExcel = (data: SurveyData, fileName: string) => {
-  // Chuẩn bị dữ liệu: Flatten object để đưa vào Excel
   const exportData: Record<string, string> = {};
   
   QUESTIONS.forEach(q => {
     const value = data[q.id as keyof SurveyData];
     exportData[`${q.number}. ${q.label}`] = Array.isArray(value) ? value.join(', ') : (value as string) || '';
     
-    // Thêm các trường detail/other nếu có
     if (q.id === 'q14' && data.q14_detail) exportData['14. Chi tiết liên hệ'] = data.q14_detail;
     if (q.id === 'q15' && data.q15_other) exportData['15. Lĩnh vực quan tâm khác'] = data.q15_other;
     if (q.id === 'q23' && data.q23_other) exportData['23. Nhu cầu hỗ trợ khác'] = data.q23_other;
   });
 
-  // Xử lý Phần 4 (Bảng)
   data.q21.forEach((cp, index) => {
     exportData[`P4.${index+1} Lĩnh vực`] = cp.field;
     exportData[`P4.${index+1} Họ tên`] = cp.name;
@@ -51,7 +47,7 @@ export const exportToExcel = (data: SurveyData, fileName: string) => {
  * EXPORT TO WORD (DOCX)
  */
 export const exportToDocx = async (data: SurveyData, fileName: string) => {
-  const sections = SECTIONS.map(section => {
+  const sectionsContent = SECTIONS.map(section => {
     const children: any[] = [
       new Paragraph({
         text: section.title,
@@ -64,10 +60,10 @@ export const exportToDocx = async (data: SurveyData, fileName: string) => {
       const rows = [
         new TableRow({
           children: [
-            new TableCell({ children: [new Paragraph({ text: 'Lĩnh vực', bold: true })] }),
-            new TableCell({ children: [new Paragraph({ text: 'Họ tên', bold: true })] }),
-            new TableCell({ children: [new Paragraph({ text: 'Chức danh', bold: true })] }),
-            new TableCell({ children: [new Paragraph({ text: 'SĐT và Email', bold: true })] }),
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Lĩnh vực', bold: true })] })] }),
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Họ tên', bold: true })] })] }),
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Chức danh', bold: true })] })] }),
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'SĐT và Email', bold: true })] })] }),
           ],
         }),
         ...data.q21.map(cp => new TableRow({
@@ -102,15 +98,14 @@ export const exportToDocx = async (data: SurveyData, fileName: string) => {
             })
           );
 
-          // Handle detail fields
           if (qId === 'q14' && data.q14_detail) {
-            children.push(new Paragraph({ text: `   - Chi tiết: ${data.q14_detail}`, italics: true }));
+            children.push(new Paragraph({ children: [new TextRun({ text: `   - Chi tiết: ${data.q14_detail}`, italics: true })] }));
           }
           if (qId === 'q15' && data.q15_other) {
-            children.push(new Paragraph({ text: `   - Khác: ${data.q15_other}`, italics: true }));
+            children.push(new Paragraph({ children: [new TextRun({ text: `   - Khác: ${data.q15_other}`, italics: true })] }));
           }
           if (qId === 'q23' && data.q23_other) {
-            children.push(new Paragraph({ text: `   - Khác: ${data.q23_other}`, italics: true }));
+            children.push(new Paragraph({ children: [new TextRun({ text: `   - Khác: ${data.q23_other}`, italics: true })] }));
           }
         }
       });
@@ -129,7 +124,7 @@ export const exportToDocx = async (data: SurveyData, fileName: string) => {
           alignment: AlignmentType.CENTER,
           spacing: { after: 400 },
         }),
-        ...sections
+        ...sectionsContent
       ],
     }],
   });
