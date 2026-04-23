@@ -1,49 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  --primary-gradient: linear-gradient(135deg, #002766 0%, #1677ff 100%);
+  --bg-gradient: radial-gradient(circle at top left, #f0f5ff 0%, #ffffff 50%, #e6f7ff 100%);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --shadow-premium: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 
 body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: #1f1f1f;
+  font-family: 'Outfit', -apple-system, sans-serif;
+  min-height: 100vh;
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.survey-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 24px 140px;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Glassmorphism Section Card */
+.section-card {
+  margin-bottom: 40px;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: 20px !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--shadow-premium) !important;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-5px);
+}
+
+.section-title {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+/* Custom Header Styling */
+.header-container {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.header-title {
+  font-size: 2.8rem !important;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px !important;
+  font-weight: 800 !important;
+}
+
+/* Premium Buttons */
+.ant-btn-primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(22, 119, 255, 0.3) !important;
+  height: 45px !important;
+  padding: 0 30px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.ant-btn-primary:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.4) !important;
+}
+
+/* Question Labels */
+.question-label {
+  font-size: 1.05rem;
+  color: #001529;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Input Styles */
+.ant-input, .ant-input-affix-wrapper {
+  border-radius: 10px !important;
+  border-color: #d9d9d9 !important;
+  padding: 10px 15px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-input:focus, .ant-input-affix-wrapper-focused {
+  border-color: #1677ff !important;
+  box-shadow: 0 0 0 4px rgba(22, 119, 255, 0.1) !important;
+}
+
+/* Sticky Action Bar */
+.sticky-bar {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 960px;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(25px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 28px !important;
+  padding: 12px 24px !important;
+  z-index: 1000;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.08),
+    0 0 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.submit-btn-premium {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(22, 119, 255, 0.3) !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+}
+
+.action-btn-danger:hover {
+  background: #fff1f0 !important;
+  color: #ff4d4f !important;
+  border-radius: 10px;
+}
+
+/* Progress Bar Customization */
+.ant-progress-inner {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.action-btn {
+  border-radius: 10px !important;
+  border: 1px solid #f0f0f0 !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.action-btn:hover {
+  background: #f0f5ff !important;
+  border-color: #1677ff !important;
+  color: #1677ff !important;
+}
+
+/* Animation for components */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Print CSS Adjustment */
+@media print {
+  .survey-container { padding: 0; }
+  .sticky-bar { display: none !important; }
+  .section-card { 
+    background: white !important; 
+    border: 1px solid #eee !important; 
+    box-shadow: none !important; 
+    transform: none !important;
   }
 }

@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Website Khảo sát RSA / CLB Sao Đỏ
 
-## Getting Started
+Website biểu mẫu khảo sát doanh nghiệp chuyên nghiệp được xây dựng bằng Next.js 14, Ant Design và React Hook Form.
 
-First, run the development server:
+## Tính năng chính
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Form 5 phần chuyên sâu**: Bao phủ toàn bộ thông tin doanh nghiệp, đại diện, đầu mối và nhu cầu kết nối.
+- **Bảng động (Phần 4)**: Cho phép thêm/xóa đầu mối chuyên môn, tự động chuyển sang giao diện Card trên Mobile.
+- **Autosave**: Tự động lưu bản nháp vào LocalStorage để không mất dữ liệu khi tải lại trang.
+- **Import/Export JSON**: Cho phép người dùng tải về bản ghi hoặc nhập lại file JSON để tiếp tục điền.
+- **Xem lại trước khi gửi**: Drawer tóm tắt toàn bộ thông tin đã nhập giúp người dùng kiểm tra kỹ trước khi nộp.
+- **Tối ưu in ấn**: CSS riêng biệt giúp bản in đẹp mắt và chuyên nghiệp.
+- **Validation chặt chẽ**: Sử dụng Zod để kiểm tra tính hợp lệ của dữ liệu, bao gồm cả các logic điều kiện.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Công nghệ sử dụng
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: Next.js 14 (App Router)
+- **UI Library**: Ant Design (antd)
+- **Form Management**: React Hook Form
+- **Validation**: Zod
+- **Date/Time**: Dayjs
+- **Icons**: @ant-design/icons
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Hướng dẫn cài đặt
 
-## Learn More
+1. **Cài đặt dependencies**:
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Chạy môi trường phát triển**:
+   ```bash
+   npm run dev
+   ```
+   Mở [http://localhost:3000](http://localhost:3000) trên trình duyệt.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Build production**:
+   ```bash
+   npm run build
+   npm start
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cấu trúc thư mục
 
-## Deploy on Vercel
+- `/app`: Chứa các trang và API routes.
+- `/components`: Các thành phần giao diện tái sử dụng.
+- `/constants`: Nội dung câu hỏi và cấu hình khảo sát.
+- `/schemas`: Logic validation dữ liệu.
+- `/types`: Định nghĩa kiểu dữ liệu TypeScript.
+- `/utils`: Các hàm tiện ích (Storage, Import/Export).
+- `/hooks`: Custom hooks (Autosave).
+- `/styles`: CSS toàn cục và CSS in ấn.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tùy biến
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Thay đổi câu hỏi**: Chỉnh sửa tại `constants/survey.ts`.
+- **Thay đổi logic validation**: Chỉnh sửa tại `schemas/survey.schema.ts`.
+- **Thay đổi giao diện**: Chỉnh sửa `app/globals.css` hoặc các component trong `components/survey/`.
