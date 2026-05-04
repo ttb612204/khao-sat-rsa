@@ -46,7 +46,8 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ visible, onClose, data }) =
                 { title: 'Lĩnh vực', dataIndex: 'field' },
                 { title: 'Họ tên', dataIndex: 'name' },
                 { title: 'Chức danh', dataIndex: 'position' },
-                { title: 'SĐT/Email', dataIndex: 'phoneEmail' },
+                { title: 'SĐT', dataIndex: 'phone' },
+                { title: 'Email', dataIndex: 'email' },
               ]}
             />
           ) : (

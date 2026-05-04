@@ -48,30 +48,35 @@ export const QUESTIONS: Question[] = [
     options: DEFAULT_CONTACT_POINTS,
     helperText: 'Chọn các lĩnh vực ưu tiên'
   },
+  { id: 'q15_sustainability', number: 16, label: 'Doanh nghiệp đã có báo cáo bền vững chưa?', type: 'textarea', required: true, placeholder: 'Nhập thông tin báo cáo bền vững' },
+  { id: 'q15_csr', number: 17, label: 'Lĩnh vực CSR ưu tiên?', type: 'textarea', required: true, placeholder: 'Nhập lĩnh vực CSR ưu tiên' },
 
   // PHẦN 3
-  { id: 'q16', number: 16, label: 'Họ tên đầu mối chính (trợ lý, thư ký, chánh văn phòng, giám đốc đối ngoại...)', type: 'textarea', required: true, placeholder: 'Nhập họ tên đầu mối' },
-  { id: 'q17', number: 17, label: 'Chức danh đầu mối chính', type: 'textarea', required: true, placeholder: 'Nhập chức danh' },
-  { id: 'q18_phone', number: 18.1, label: 'Số điện thoại đầu mối', type: 'textarea', required: true, placeholder: 'Nhập số điện thoại' },
-  { id: 'q18_email', number: 18.2, label: 'Email đầu mối', type: 'textarea', required: true, placeholder: 'Nhập email' },
-  { id: 'q18_other', number: 18.3, label: 'Zalo hoặc phương thức liên hệ khác', type: 'textarea', required: true, placeholder: 'Nhập thông tin khác' },
+  { id: 'q16', number: 18, label: 'Họ tên đầu mối chính (trợ lý, thư ký, chánh văn phòng, giám đốc đối ngoại...)', type: 'textarea', required: true, placeholder: 'Nhập họ tên đầu mối' },
+  { id: 'q17', number: 19, label: 'Chức danh đầu mối chính', type: 'textarea', required: true, placeholder: 'Nhập chức danh' },
+  { id: 'q18_phone', number: 20.1, label: 'Số điện thoại đầu mối', type: 'textarea', required: true, placeholder: 'Nhập số điện thoại' },
+  { id: 'q18_email', number: 20.2, label: 'Email đầu mối', type: 'textarea', required: true, placeholder: 'Nhập email' },
+  { id: 'q18_other', number: 20.3, label: 'Zalo hoặc phương thức liên hệ khác', type: 'textarea', required: true, placeholder: 'Nhập thông tin khác' },
   {
-    id: 'q19', number: 19, label: 'Vai trò của đầu mối trong doanh nghiệp với RSA', type: 'checkbox', required: true,
+    id: 'q19', number: 21, label: 'Vai trò của đầu mối trong doanh nghiệp với RSA', type: 'checkbox', required: true,
     options: ['Nhận thông tin hoạt động', 'Xác nhận/điều phối lịch tham dự', 'Điều phối liên hệ nội bộ', 'Thay mặt lãnh đạo trong sự kiện chuyên đề', 'Triển khai xúc tiến hợp tác ban đầu']
   },
   {
-    id: 'q20', number: 20, label: 'Mức độ ủy quyền của đầu mối', type: 'checkbox', required: true,
+    id: 'q20', number: 22, label: 'Mức độ ủy quyền của đầu mối', type: 'checkbox', required: true,
     options: ['Chỉ nhận/báo cáo thông tin', 'Có thể xác nhận tham dự hoạt động', ' Được phép tham gia, ký kết/hợp tác ở mức ban đầu'],
     helperText: 'Chọn các mức độ ủy quyền phù hợp'
   },
 
+  // PHẦN 4
+  { id: 'q21', number: 23, label: 'Đầu mối chuyên môn để “kết nối đa điểm”', type: 'textarea', required: false, placeholder: '' },
+
   // PHẦN 5
-  { id: 'q22', number: 22, label: 'Thế mạnh nổi bật doanh nghiệp có thể đóng góp cho mạng lưới RSA', type: 'textarea', required: true, placeholder: 'Nhập thế mạnh doanh nghiệp' },
+  { id: 'q22', number: 24, label: 'Thế mạnh nổi bật doanh nghiệp có thể đóng góp cho mạng lưới RSA', type: 'textarea', required: true, placeholder: 'Nhập thế mạnh doanh nghiệp' },
   {
-    id: 'q23', number: 23, label: 'Nhu cầu ưu tiên doanh nghiệp muốn RSA hỗ trợ kết nối', type: 'checkbox', required: true,
+    id: 'q23', number: 25, label: 'Nhu cầu ưu tiên doanh nghiệp muốn RSA hỗ trợ kết nối', type: 'checkbox', required: true,
     options: ['Khách hàng mới', 'Nhà cung cấp', 'Đối tác phân phối', 'Đối tác đầu tư', 'Đối tác công nghệ', 'Đối tác xuất khẩu', 'Đối tác truyền thông', 'Tuyển dụng nhân sự cấp cao', 'Chủ đề khác']
   },
-  { id: 'q24', number: 24, label: 'Danh mục sản phẩm/dịch vụ/cơ hội hợp tác muốn giới thiệu, ưu tiên kết nối trong mạng lưới hội viên RSA', type: 'textarea', required: true, placeholder: 'Nhập danh mục sản phẩm/dịch vụ' },
+  { id: 'q24', number: 26, label: 'Danh mục sản phẩm/dịch vụ/cơ hội hợp tác muốn giới thiệu, ưu tiên kết nối trong mạng lưới hội viên RSA', type: 'textarea', required: true, placeholder: 'Nhập danh mục sản phẩm/dịch vụ' },
 ];
 
 export const SECTIONS: Section[] = [
@@ -83,7 +88,7 @@ export const SECTIONS: Section[] = [
   {
     id: 'section2',
     title: 'PHẦN 2. HỘI VIÊN CHÍNH THỨC TẠI RSA',
-    questions: ['q11', 'q12', 'q13', 'q14', 'q15']
+    questions: ['q11', 'q12', 'q13', 'q14', 'q15', 'q15_sustainability', 'q15_csr']
   },
   {
     id: 'section3',

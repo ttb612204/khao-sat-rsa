@@ -243,10 +243,11 @@ export default function AdminPage() {
               dataSource={selectedResponse.q21}
               rowKey="key"
               columns={[
-                { title: 'Lĩnh vực', dataIndex: 'field', width: '25%' },
-                { title: 'Họ tên', dataIndex: 'name', width: '25%' },
+                { title: 'Lĩnh vực', dataIndex: 'field', width: '20%' },
+                { title: 'Họ tên', dataIndex: 'name', width: '20%' },
                 { title: 'Chức danh', dataIndex: 'position', width: '20%' },
-                { title: 'SĐT/Email', dataIndex: 'phoneEmail', width: '30%' },
+                { title: 'SĐT', dataIndex: 'phone', width: '20%' },
+                { title: 'Email', dataIndex: 'email', width: '20%' },
               ]}
               bordered
             />

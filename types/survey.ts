@@ -1,6 +1,6 @@
 export interface Question {
   id: string;
-  number: number;
+  number: number | string;
   label: string;
   type: 'textarea' | 'checkbox';
   options?: string[];
@@ -17,11 +17,11 @@ export interface Section {
 }
 
 export interface ContactPoint {
-  key: string;
   field: string;
   name: string;
   position: string;
-  phoneEmail: string;
+  phone: string;
+  email: string;
 }
 
 export interface SurveyData {
@@ -47,6 +47,8 @@ export interface SurveyData {
   q14_detail?: string;
   q15: string[];
   q15_other?: string;
+  q15_sustainability: string;
+  q15_csr: string;
 
   // Section 3
   q16: string;

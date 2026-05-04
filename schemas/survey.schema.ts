@@ -31,6 +31,8 @@ export const surveySchema = z.object({
   q14_detail: z.string().optional(),
   q15: z.array(z.string()).min(1, 'Vui lòng chọn ít nhất một lĩnh vực'),
   q15_other: z.string().optional(),
+  q15_sustainability: z.string().min(1, 'Vui lòng nhập thông tin báo cáo bền vững'),
+  q15_csr: z.string().min(1, 'Vui lòng nhập lĩnh vực CSR ưu tiên'),
 
   // Section 3
   q16: z.string().min(1, 'Vui lòng nhập họ tên đầu mối'),

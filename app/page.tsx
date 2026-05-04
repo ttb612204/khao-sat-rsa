@@ -45,6 +45,8 @@ export default function SurveyPage() {
         phone: '',
         email: '',
       })),
+      q15_sustainability: '',
+      q15_csr: '',
       q23: [],
     },
   });
@@ -187,6 +189,8 @@ export default function SurveyPage() {
               phone: '',
               email: '',
             })),
+            q15_sustainability: '',
+            q15_csr: '',
             q23: [],
           } as any);
           clearDraft();
