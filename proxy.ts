@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Protect /admin and /api/responses
