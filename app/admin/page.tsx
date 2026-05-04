@@ -21,7 +21,8 @@ import {
   EyeOutlined, 
   FileExcelOutlined,
   SearchOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -64,6 +65,18 @@ export default function AdminPage() {
       }
     } catch (error) {
       message.error('Lỗi khi xóa');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/api/auth/logout', { method: 'POST' });
+      if (res.ok) {
+        message.success('Đã đăng xuất');
+        router.push('/login');
+      }
+    } catch (error) {
+      message.error('Lỗi khi đăng xuất');
     }
   };
 
@@ -175,6 +188,14 @@ export default function AdminPage() {
             style={{ background: '#1d6f42', borderColor: '#1d6f42' }}
           >
             Xuất Excel Tổng Hợp ({responses.length})
+          </Button>
+          <Button 
+            danger 
+            icon={<LogoutOutlined />} 
+            onClick={handleLogout}
+            size="large"
+          >
+            Đăng xuất
           </Button>
         </Space>
       </header>
