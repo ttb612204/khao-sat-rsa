@@ -1,86 +1,93 @@
 'use client';
 
 import React from 'react';
-import { Drawer, Descriptions, Divider, Typography, Table } from 'antd';
-import { QUESTIONS, SECTIONS } from '@/constants/survey';
-import { SurveyData } from '@/types/survey';
+import { Drawer, Button, Typography, Divider, Tag, Space } from 'antd';
+import { QUESTIONS } from '@/constants/survey';
+import { FileSearchOutlined, SendOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
 interface ReviewDrawerProps {
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
-  data: SurveyData;
+  data: any;
+  onSubmit: () => void;
+  isSubmitting: boolean;
 }
 
-const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ visible, onClose, data }) => {
-  const renderValue = (val: any) => {
-    if (Array.isArray(val)) return val.join(', ') || '(Trống)';
-    return val || '(Trống)';
-  };
-
+const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubmit, isSubmitting }) => {
   return (
     <Drawer
-      title="Xem lại thông tin khảo sát"
+      title={
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d32f2f' }}>
+          <FileSearchOutlined /> XEM LẠI THÔNG TIN ĐÃ NHẬP
+        </div>
+      }
       placement="right"
       onClose={onClose}
-      open={visible}
-      size={typeof window !== 'undefined' && window.innerWidth > 768 ? 800 : '100%'}
+      open={open}
+      width={720}
+      extra={
+        <Space>
+          <Button onClick={onClose}>Tiếp tục sửa</Button>
+          <Button type="primary" icon={<SendOutlined />} onClick={onSubmit} loading={isSubmitting}>
+            Gửi ngay
+          </Button>
+        </Space>
+      }
     >
-      <Title level={4} style={{ textAlign: 'center', marginBottom: 32 }}>
-        BẢN TÓM TẮT THÔNG TIN
-      </Title>
+      <div className="review-content">
+        {QUESTIONS.map((q) => {
+          const value = data[q.id];
+          if (q.id === 'q21') return null;
 
-      {SECTIONS.map((section) => (
-        <div key={section.id} style={{ marginBottom: 40 }}>
-          <Title level={5} style={{ color: '#1677ff', borderLeft: '4px solid #1677ff', paddingLeft: 12 }}>
-            {section.title}
-          </Title>
-          
-          {section.id === 'section4' ? (
-            <Table 
-              dataSource={data.q21} 
-              pagination={false} 
-              size="small"
-              columns={[
-                { title: 'Lĩnh vực', dataIndex: 'field' },
-                { title: 'Họ tên', dataIndex: 'name' },
-                { title: 'Chức danh', dataIndex: 'position' },
-                { title: 'SĐT', dataIndex: 'phone' },
-                { title: 'Email', dataIndex: 'email' },
-              ]}
-            />
-          ) : (
-            <Descriptions bordered column={1} size="small">
-              {section.questions.map((qId) => {
-                const q = QUESTIONS.find((item) => item.id === qId);
-                if (!q) return null;
-                return (
-                  <Descriptions.Item key={qId} label={`${q.number}. ${q.label}`}>
-                    {renderValue(data[qId as keyof SurveyData])}
-                    {qId === 'q14' && data.q14?.includes('Chỉ liên hệ trực tiếp khi cần') && (
-                      <div style={{ marginTop: 8, color: '#8c8c8c' }}>
-                        Mô tả: {data.q14_detail}
-                      </div>
-                    )}
-                    {qId === 'q15' && data.q15?.includes('Chủ đề khác') && (
-                      <div style={{ marginTop: 8, color: '#8c8c8c' }}>
-                        Khác: {data.q15_other}
-                      </div>
-                    )}
-                    {qId === 'q23' && data.q23?.includes('Chủ đề khác') && (
-                      <div style={{ marginTop: 8, color: '#8c8c8c' }}>
-                        Khác: {data.q23_other}
-                      </div>
-                    )}
-                  </Descriptions.Item>
-                );
-              })}
-            </Descriptions>
-          )}
-          <Divider />
+          return (
+            <div key={q.id} className="review-item">
+              <Text strong className="review-q">{q.number}. {q.label}</Text>
+              <div className="review-ans">
+                {Array.isArray(value) ? (
+                  value.length > 0 ? (
+                    value.map((v: string) => <Tag key={v} color="blue" style={{ marginBottom: 4 }}>{v}</Tag>)
+                  ) : (
+                    <Text type="secondary">Chưa chọn</Text>
+                  )
+                ) : value ? (
+                  <Text style={{ whiteSpace: 'pre-wrap' }}>{value}</Text>
+                ) : (
+                  <Text type="secondary">Chưa nhập</Text>
+                )}
+              </div>
+              <Divider style={{ margin: '12px 0' }} />
+            </div>
+          );
+        })}
+
+        <Title level={5} style={{ color: '#d32f2f', marginTop: 24 }}>Phần 4: Đầu mối kết nối</Title>
+        <div className="contact-review">
+          {data.q21?.map((item: any, idx: number) => (
+            <div key={idx} style={{ marginBottom: 16, padding: 12, background: '#fafafa', borderRadius: 8 }}>
+              <Text strong>{item.field}</Text>
+              <br />
+              <Text>Họ tên: {item.name || 'N/A'}</Text> | <Text>SĐT: {item.phone || 'N/A'}</Text>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      <style jsx>{`
+        .review-item {
+          margin-bottom: 20px;
+        }
+        .review-q {
+          display: block;
+          margin-bottom: 8px;
+          color: #555;
+        }
+        .review-ans {
+          padding-left: 12px;
+          border-left: 3px solid #eee;
+        }
+      `}</style>
     </Drawer>
   );
 };

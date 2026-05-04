@@ -1,70 +1,75 @@
 'use client';
 
 import React from 'react';
-import { 
-  SaveOutlined, 
-  DeleteOutlined, 
-  EyeOutlined, 
-  SendOutlined
-} from '@ant-design/icons';
-import { Button, Space, Popconfirm, Tooltip } from 'antd';
+import { Button, Space } from 'antd';
+import { SaveOutlined, SendOutlined, FileSearchOutlined } from '@ant-design/icons';
 
 interface SubmitBarProps {
-  onSave: () => void;
-  onReset: () => void;
   onReview: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
+  isDirty?: boolean;
 }
 
-const SubmitBar: React.FC<SubmitBarProps> = ({ 
-  onSave, onReset, onReview, onSubmit, isSubmitting 
-}) => {
+const SubmitBar: React.FC<SubmitBarProps> = ({ onReview, onSubmit, isSubmitting, isDirty }) => {
   return (
-    <div className="sticky-bar">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: '16px' }}>
-        {/* Nhóm tiện ích bên trái */}
-        <Space size="middle" wrap>
-          <Tooltip title="Lưu bản nháp vào trình duyệt">
-            <Button icon={<SaveOutlined />} onClick={onSave} className="action-btn">Lưu nháp</Button>
-          </Tooltip>
+    <div className="submit-bar">
+      <Space size="large">
+        <Button 
+          icon={<FileSearchOutlined />} 
+          size="large" 
+          onClick={onReview}
+          className="btn-review"
+        >
+          XEM LẠI PHIẾU
+        </Button>
+        <Button 
+          type="primary" 
+          icon={<SendOutlined />} 
+          size="large" 
+          onClick={onSubmit}
+          loading={isSubmitting}
+          className="btn-submit"
+        >
+          GỬI PHIẾU KHẢO SÁT
+        </Button>
+      </Space>
 
-          <Popconfirm
-            title="Xóa toàn bộ dữ liệu đang nhập?"
-            onConfirm={onReset}
-            okText="Xóa"
-            cancelText="Hủy"
-            okButtonProps={{ danger: true }}
-          >
-            <Tooltip title="Xóa sạch dữ liệu hiện tại">
-              <Button icon={<DeleteOutlined />} danger type="text" className="action-btn-danger" />
-            </Tooltip>
-          </Popconfirm>
-        </Space>
+      <style jsx>{`
+        .submit-bar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(10px);
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          box-shadow: 0 -10px 20px rgba(0,0,0,0.05);
+          z-index: 1000;
+          border-top: 1px solid rgba(255,255,255,0.5);
+        }
 
-        {/* Nhóm hành động chính bên phải */}
-        <Space size="large" wrap>
-          <Button 
-            icon={<EyeOutlined />} 
-            onClick={onReview} 
-            size="large" 
-            style={{ borderRadius: '14px', border: '1px solid #d9d9d9', fontWeight: 500, height: '48px' }}
-          >
-            Xem lại
-          </Button>
-          <Button 
-            type="primary" 
-            icon={<SendOutlined />} 
-            onClick={onSubmit} 
-            loading={isSubmitting}
-            size="large"
-            style={{ height: '48px', padding: '0 32px' }}
-            className="submit-btn-premium"
-          >
-            Gửi phiếu khảo sát
-          </Button>
-        </Space>
-      </div>
+        :global(.btn-review) {
+          border-radius: 12px !important;
+          height: 52px !important;
+          padding: 0 32px !important;
+          font-weight: 600 !important;
+          border: 2px solid #d32f2f !important;
+          color: #d32f2f !important;
+        }
+
+        :global(.btn-submit) {
+          border-radius: 12px !important;
+          height: 52px !important;
+          padding: 0 40px !important;
+          font-weight: 700 !important;
+          background: linear-gradient(135deg, #ff4d4f 0%, #d32f2f 100%) !important;
+          border: none !important;
+          box-shadow: 0 8px 16px rgba(211,47,47,0.2) !important;
+        }
+      `}</style>
     </div>
   );
 };
