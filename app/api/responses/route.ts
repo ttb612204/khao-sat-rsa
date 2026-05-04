@@ -45,6 +45,12 @@ export async function DELETE(request: Request) {
     }
 
     await pool.execute('DELETE FROM responses WHERE id = ?', [id]);
+
+    // Ghi nhật ký xóa dữ liệu
+    await pool.execute(
+      'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
+      ['DELETE_RECORD', 'admin', `Xóa bản ghi ID: ${id}`]
+    );
     
     return NextResponse.json({ message: 'Xóa thành công khỏi MySQL' }, { status: 200 });
   } catch (error: any) {

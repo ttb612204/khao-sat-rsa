@@ -45,6 +45,16 @@ CREATE TABLE `users` (
 -- 3. Thêm tài khoản quản trị mặc định (admin / rsa123456)
 -- Lưu ý: Mật khẩu 'rsa123456' đã được mã hóa bằng bcrypt
 INSERT INTO `users` (`username`, `password`) VALUES ('admin', '$2b$10$WdTSd0tnTqYfTLXXhnZJ.uMR3SoCXbQi0RFB6NtXl1wwrwU3Ifby.');
+
+-- 4. Tạo bảng lưu nhật ký hoạt động (Audit Logs)
+CREATE TABLE `audit_logs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `action` VARCHAR(100) NOT NULL,
+  `username` VARCHAR(50) DEFAULT 'unknown',
+  `details` TEXT DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
 *   Nhấn nút **Go** để thực thi.

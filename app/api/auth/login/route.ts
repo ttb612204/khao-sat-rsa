@@ -21,6 +21,12 @@ export async function POST(request: Request) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
+        // Ghi nhật ký đăng nhập thành công
+        await pool.execute(
+          'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
+          ['LOGIN_SUCCESS', username, 'Đăng nhập vào hệ thống quản trị']
+        );
+
         // Đăng nhập thành công
         const response = NextResponse.json({ success: true });
         
@@ -31,18 +37,24 @@ export async function POST(request: Request) {
           .update(username + Date.now())
           .digest('hex');
 
-        // Thiết lập cookie phiên làm việc
+        // Thiết lập cookie phiên làm việc - GIỚI HẠN 1 TIẾNG
         (await cookies()).set('admin_session', sessionToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 60 * 60 * 24, // 24 giờ
+          maxAge: 60 * 60, // 1 giờ (3600 giây)
           path: '/',
         });
 
         return response;
       }
     }
+
+    // Ghi nhật ký đăng nhập thất bại
+    await pool.execute(
+      'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
+      ['LOGIN_FAILED', username || 'unknown', 'Thử đăng nhập sai mật khẩu']
+    );
 
     // Thêm khoảng trễ để chống Brute Force
     await new Promise(resolve => setTimeout(resolve, 1000));
