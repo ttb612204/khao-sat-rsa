@@ -1,6 +1,6 @@
 import { Question, Section } from '../types/survey';
 
-export const SURVEY_TITLE = "PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN RSA / CLB SAO ĐỎ";
+export const SURVEY_TITLE = "PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN VABSO";
 export const SURVEY_SUBTITLE = "Áp dụng cho doanh nghiệp hội viên lớn - kết nối đa điểm";
 
 export const DEFAULT_CONTACT_POINTS = [
