@@ -43,7 +43,8 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 3. Thêm tài khoản quản trị mặc định (admin / rsa123456)
-INSERT INTO `users` (`username`, `password`) VALUES ('admin', 'rsa123456');
+-- Lưu ý: Mật khẩu 'rsa123456' đã được mã hóa bằng bcrypt
+INSERT INTO `users` (`username`, `password`) VALUES ('admin', '$2b$10$WdTSd0tnTqYfTLXXhnZJ.uMR3SoCXbQi0RFB6NtXl1wwrwU3Ifby.');
 ```
 
 *   Nhấn nút **Go** để thực thi.

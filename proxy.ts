@@ -7,7 +7,7 @@ export default function proxy(request: NextRequest) {
   if (path.startsWith('/admin') || path === '/api/responses') {
     const session = request.cookies.get('admin_session');
 
-    if (!session || session.value !== 'authenticated') {
+    if (!session || !session.value || session.value.length < 32) {
       // If it's an API request, return 401
       if (path.startsWith('/api/')) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
