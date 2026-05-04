@@ -1,34 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Form, message, Input } from 'antd';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Form, message, FloatButton, ConfigProvider } from 'antd';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FileSearchOutlined, SendOutlined, SaveOutlined } from '@ant-design/icons';
 
-import SurveyHeader from '@/components/survey/SurveyHeader';
+import { QUESTIONS, SECTIONS, SURVEY_TITLE, SURVEY_SUBTITLE } from '@/constants/survey';
+import { surveySchema, SurveySchemaType } from '@/schemas/survey.schema';
+import { useSurveyAutosave } from '@/hooks/useSurveyAutosave';
+import { saveDraft, clearDraft } from '@/utils/storage';
+
 import SectionCard from '@/components/survey/SectionCard';
 import QuestionField from '@/components/survey/QuestionField';
-import ContactTableSection from '@/components/survey/ContactTableSection';
+import SurveyHeader from '@/components/survey/SurveyHeader';
 import SubmitBar from '@/components/survey/SubmitBar';
 import ReviewDrawer from '@/components/survey/ReviewDrawer';
-
-import { QUESTIONS, SECTIONS, DEFAULT_CONTACT_POINTS } from '@/constants/survey';
-import { surveySchema, SurveySchemaType } from '@/schemas/survey.schema';
-import { loadDraft, clearDraft, saveDraft } from '@/utils/storage';
+import ContactTableSection from '@/components/survey/ContactTableSection';
 
 export default function SurveyPage() {
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [reviewVisible, setReviewVisible] = useState(false);
-  const router = useRouter();
 
   const {
     control,
     handleSubmit,
     watch,
+    setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty }
   } = useForm<SurveySchemaType>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
@@ -38,51 +39,26 @@ export default function SurveyPage() {
       q15: [],
       q19: [],
       q20: [],
-      q21: DEFAULT_CONTACT_POINTS.map((field) => ({
-        field,
-        name: '',
-        position: '',
-        phone: '',
-        email: '',
-      })),
-      q15_sustainability: '',
-      q15_csr: '',
       q23: [],
-    },
+      q21: [
+        { key: '1', field: 'Kinh doanh / Phát triển thị trường', name: '', position: '', phone: '', email: '' },
+        { key: '2', field: 'Mua hàng / Chuỗi cung ứng', name: '', position: '', phone: '', email: '' },
+        { key: '3', field: 'Đầu tư / Hợp tác chiến lược / M&A', name: '', position: '', phone: '', email: '' },
+        { key: '4', field: 'Đổi mới sáng tạo / Công nghệ', name: '', position: '', phone: '', email: '' },
+        { key: '5', field: 'Nhân sự / Đào tạo', name: '', position: '', phone: '', email: '' },
+        { key: '6', field: 'Truyền thông / Thương hiệu', name: '', position: '', phone: '', email: '' },
+      ],
+    }
   });
 
-  // Load draft on mount and ensure q21 has all 6 sectors
-  useEffect(() => {
-    const draft = loadDraft();
-    if (draft) {
-      // Merge draft with default sectors if missing
-      const mergedDraft = { ...draft };
-      if (mergedDraft.q21) {
-        const existingFields = mergedDraft.q21.map((item: any) => item.field);
-        const missingFields = DEFAULT_CONTACT_POINTS.filter(f => !existingFields.includes(f));
-        
-        if (missingFields.length > 0) {
-          mergedDraft.q21 = [
-            ...mergedDraft.q21,
-            ...missingFields.map(field => ({
-              field,
-              name: '',
-              position: '',
-              phone: '',
-              email: ''
-            }))
-          ];
-          // Sort to match original order
-          mergedDraft.q21.sort((a: any, b: any) => 
-            DEFAULT_CONTACT_POINTS.indexOf(a.field) - DEFAULT_CONTACT_POINTS.indexOf(b.field)
-          );
-        }
-      }
-      
-      reset(mergedDraft);
-      message.success('Đã khôi phục bản nháp gần nhất');
-    }
-  }, [reset]);
+  // Autosave & Load Draft
+  const { lastSaved } = useSurveyAutosave(control, reset);
+
+  const handleSaveManual = () => {
+    const data = watch();
+    saveDraft(data);
+    message.success('Đã lưu bản nháp thành công');
+  };
 
   const onSubmit = async (data: SurveySchemaType) => {
     setIsSubmitting(true);
@@ -94,9 +70,9 @@ export default function SurveyPage() {
       });
 
       if (response.ok) {
-        message.success('Gửi phiếu khảo sát thành công!');
+        message.success('Cảm ơn bạn đã hoàn thành khảo sát!');
         clearDraft();
-        router.push('/thank-you');
+        window.location.href = '/thank-you';
       } else {
         throw new Error('Gửi thất bại');
       }
@@ -108,104 +84,233 @@ export default function SurveyPage() {
   };
 
   return (
-    <main className="survey-container">
-      <SurveyHeader control={control} />
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#d32f2f',
+          borderRadius: 12,
+          fontFamily: 'Inter, system-ui, sans-serif',
+        },
+      }}
+    >
+      <main className="survey-wrapper">
+        {/* Decorative Background Elements */}
+        <div className="decor-circle circle-1"></div>
+        <div className="decor-circle circle-2"></div>
+        
+        <div className="survey-container">
+          <SurveyHeader control={control} />
 
-      <Form layout="vertical">
-        <AnimatePresence>
-          {SECTIONS.map((section, index) => (
-            <motion.div
-              key={section.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <SectionCard 
-                id={section.id} 
-                title={section.title}
-                description={section.description}
-              >
-                {section.id === 'section4' ? (
-                  <ContactTableSection control={control} />
-                ) : (
-                  section.questions.map((qId) => {
-                    const q = QUESTIONS.find((item) => item.id === qId);
-                    if (!q) return null;
-                    
-                    return (
-                      <React.Fragment key={qId}>
-                        <QuestionField 
-                          question={q} 
-                          control={control} 
-                          error={errors[qId as keyof SurveySchemaType]?.message as string} 
-                        />
-                        
-                        {/* Conditional Fields */}
-                        {qId === 'q14' && watch('q14')?.includes('Chỉ liên hệ trực tiếp khi cần') && (
-                          <Form.Item label="Mô tả trường hợp liên hệ trực tiếp">
-                            <Input.TextArea {...control.register('q14_detail')} placeholder="Nhập mô tả..." />
-                          </Form.Item>
-                        )}
-                        
-                        {qId === 'q15' && watch('q15')?.includes('Chủ đề khác') && (
-                          <Form.Item label="Nhập chủ đề quan tâm khác">
-                            <Input.TextArea {...control.register('q15_other')} placeholder="Nhập chủ đề..." />
-                          </Form.Item>
-                        )}
+          <Form layout="vertical" className="main-form">
+            <AnimatePresence>
+              {SECTIONS.map((section, index) => (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7, delay: index * 0.1 }}
+                  className="section-wrapper"
+                >
+                  <SectionCard 
+                    id={section.id} 
+                    title={section.title}
+                    description={section.description}
+                  >
+                    {section.id === 'section4' ? (
+                      <ContactTableSection control={control} />
+                    ) : (
+                      <div className="questions-grid">
+                        {section.questions.map((qId) => {
+                          const q = QUESTIONS.find((item) => item.id === qId);
+                          if (!q) return null;
+                          
+                          return (
+                            <React.Fragment key={qId}>
+                              <div className={`question-container ${q.type === 'textarea' ? 'full-width' : ''}`}>
+                                <QuestionField 
+                                  question={q} 
+                                  control={control} 
+                                  error={errors[qId as keyof SurveySchemaType]?.message as string} 
+                                />
+                                
+                                {/* Conditional Fields */}
+                                {qId === 'q14' && watch('q14')?.includes('Chỉ liên hệ trực tiếp khi cần') && (
+                                  <motion.div 
+                                    initial={{ height: 0, opacity: 0 }} 
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    className="conditional-field"
+                                  >
+                                    <Form.Item label="Mô tả trường hợp liên hệ trực tiếp" className="mt-2">
+                                      <textarea 
+                                        {...control.register('q14_detail')} 
+                                        placeholder="Nhập mô tả..."
+                                        className="premium-textarea"
+                                        rows={3}
+                                      />
+                                    </Form.Item>
+                                  </motion.div>
+                                )}
+                                
+                                {qId === 'q15' && watch('q15')?.includes('Chủ đề khác') && (
+                                  <motion.div 
+                                    initial={{ height: 0, opacity: 0 }} 
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    className="conditional-field"
+                                  >
+                                    <Form.Item label="Nhập chủ đề khác" className="mt-2">
+                                      <input 
+                                        {...control.register('q15_other')} 
+                                        placeholder="Nhập chủ đề..."
+                                        className="premium-input"
+                                      />
+                                    </Form.Item>
+                                  </motion.div>
+                                )}
 
-                        {qId === 'q23' && watch('q23')?.includes('Chủ đề khác') && (
-                          <Form.Item label="Nhập nhu cầu hỗ trợ khác">
-                            <Input.TextArea {...control.register('q23_other')} placeholder="Nhập nhu cầu..." />
-                          </Form.Item>
-                        )}
-                      </React.Fragment>
-                    );
-                  })
-                )}
-              </SectionCard>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </Form>
+                                {qId === 'q23' && watch('q23')?.includes('Chủ đề khác') && (
+                                  <motion.div 
+                                    initial={{ height: 0, opacity: 0 }} 
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    className="conditional-field"
+                                  >
+                                    <Form.Item label="Nhập chủ đề khác" className="mt-2">
+                                      <input 
+                                        {...control.register('q23_other')} 
+                                        placeholder="Nhập chủ đề..."
+                                        className="premium-input"
+                                      />
+                                    </Form.Item>
+                                  </motion.div>
+                                )}
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </SectionCard>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </Form>
 
-      <SubmitBar 
-        onSave={() => {
-          saveDraft(watch());
-          message.success('Đã lưu bản nháp');
-        }}
-        onReset={() => {
-          reset({
-            q6: [],
-            q13: [],
-            q14: [],
-            q15: [],
-            q19: [],
-            q20: [],
-            q21: DEFAULT_CONTACT_POINTS.map((field) => ({
-              field,
-              name: '',
-              position: '',
-              phone: '',
-              email: '',
-            })),
-            q15_sustainability: '',
-            q15_csr: '',
-            q23: [],
-          } as any);
-          clearDraft();
-          message.info('Đã xóa toàn bộ dữ liệu và khôi phục mặc định');
-        }}
-        onReview={() => setReviewVisible(true)}
-        onSubmit={handleSubmit(onSubmit)}
-        isSubmitting={isSubmitting}
-      />
+          <SubmitBar 
+            onSaveDraft={handleSaveManual}
+            onReview={() => setIsReviewOpen(true)}
+            onSubmit={handleSubmit(onSubmit)}
+            isSubmitting={isSubmitting}
+            isDirty={isDirty}
+          />
 
-      <ReviewDrawer 
-        visible={reviewVisible} 
-        onClose={() => setReviewVisible(false)} 
-        data={watch() as any}
-      />
-    </main>
+          <ReviewDrawer 
+            open={isReviewOpen}
+            onClose={() => setIsReviewOpen(false)}
+            data={watch()}
+            onSubmit={handleSubmit(onSubmit)}
+            isSubmitting={isSubmitting}
+          />
+
+          <FloatButton.Group trigger="hover" type="primary" icon={<FileSearchOutlined />} style={{ right: 24, bottom: 100 }}>
+            <FloatButton icon={<SaveOutlined />} onClick={handleSaveManual} tooltip="Lưu nháp ngay" />
+            <FloatButton icon={<SendOutlined />} onClick={handleSubmit(onSubmit)} tooltip="Gửi phiếu ngay" />
+          </FloatButton.Group>
+        </div>
+
+        <style jsx global>{`
+          .survey-wrapper {
+            background-color: #fcf6f6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 120px;
+          }
+
+          .decor-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            opacity: 0.4;
+          }
+
+          .circle-1 {
+            width: 600px;
+            height: 600px;
+            background: #ff4d4f;
+            top: -200px;
+            left: -200px;
+          }
+
+          .circle-2 {
+            width: 500px;
+            height: 500px;
+            background: #1890ff;
+            bottom: 100px;
+            right: -200px;
+          }
+
+          .survey-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+          }
+
+          .main-form {
+            margin-top: -40px;
+          }
+
+          .section-wrapper {
+            margin-bottom: 40px;
+          }
+
+          .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+          }
+
+          .question-container.full-width {
+            grid-column: span 2;
+          }
+
+          .premium-input, .premium-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #d9d9d9;
+            transition: all 0.3s;
+            outline: none;
+          }
+
+          .premium-input:focus, .premium-textarea:focus {
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 2px rgba(211,47,47,0.1);
+          }
+
+          .conditional-field {
+            margin-top: 12px;
+            padding: 16px;
+            background: #fff1f0;
+            border-radius: 16px;
+            border-left: 4px solid #ff4d4f;
+          }
+
+          @media (max-width: 768px) {
+            .questions-grid {
+              grid-template-columns: 1fr;
+            }
+            .question-container.full-width {
+              grid-column: span 1;
+            }
+            .survey-container {
+              padding: 0 12px;
+            }
+          }
+        `}</style>
+      </main>
+    </ConfigProvider>
   );
 }
