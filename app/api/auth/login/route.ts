@@ -1,13 +1,15 @@
-export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { supabase } from '@/utils/supabase';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
+    console.log('[LOGIN] Attempt for:', username);
 
     // Tìm kiếm user trong bảng 'users' của Supabase
     const { data: users, error } = await supabase
@@ -16,42 +18,49 @@ export async function POST(request: Request) {
       .eq('username', username);
 
     if (error) {
-      console.error('Supabase Auth Error:', error);
-      throw error;
+      console.error('[LOGIN] Supabase Query Error:', error);
+      return NextResponse.json({ success: false, message: 'Lỗi kết nối cơ sở dữ liệu' }, { status: 500 });
     }
 
-    if (users && users.length > 0) {
-      const user = users[0];
+    if (!users || users.length === 0) {
+      console.warn('[LOGIN] User not found:', username);
+      // Chống Brute Force
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return NextResponse.json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu' }, { status: 401 });
+    }
+
+    const user = users[0];
+    console.log('[LOGIN] User found, comparing password...');
+    
+    // Kiểm tra mật khẩu đã mã hóa Bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (isPasswordValid) {
+      console.log('[LOGIN] Password valid, creating session...');
+      // Ghi nhật ký đăng nhập thành công
+      await supabase.from('audit_logs').insert([
+        { action: 'LOGIN_SUCCESS', username, details: 'Đăng nhập vào hệ thống (Cloud)' }
+      ]);
+
+      const response = NextResponse.json({ success: true });
       
-      // Kiểm tra mật khẩu đã mã hóa Bcrypt
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+      const secret = process.env.AUTH_SECRET || 'default_secret_key_123';
+      const sessionToken = crypto
+        .createHmac('sha256', secret)
+        .update(username + Date.now())
+        .digest('hex');
 
-      if (isPasswordValid) {
-        // Ghi nhật ký đăng nhập thành công
-        await supabase.from('audit_logs').insert([
-          { action: 'LOGIN_SUCCESS', username, details: 'Đăng nhập vào hệ thống (Cloud)' }
-        ]);
+      (await cookies()).set('admin_session', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60, // 1 giờ
+        path: '/',
+      });
 
-        const response = NextResponse.json({ success: true });
-        
-        // Tạo Token phiên làm việc bảo mật
-        const secret = process.env.AUTH_SECRET || 'default_secret_key_123';
-        const sessionToken = crypto
-          .createHmac('sha256', secret)
-          .update(username + Date.now())
-          .digest('hex');
-
-        // Thiết lập cookie phiên làm việc - GIỚI HẠN 1 TIẾNG
-        (await cookies()).set('admin_session', sessionToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 60 * 60, // 1 giờ
-          path: '/',
-        });
-
-        return response;
-      }
+      return response;
+    } else {
+      console.warn('[LOGIN] Password invalid for:', username);
     }
 
     // Ghi nhật ký đăng nhập thất bại
@@ -67,7 +76,7 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   } catch (error: any) {
-    console.error('Login Error:', error);
+    console.error('[LOGIN] System Error:', error);
     return NextResponse.json(
       { success: false, message: 'Lỗi hệ thống' },
       { status: 500 }
