@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
-      .eq('username', username);
+      .ilike('username', username);
 
     if (error) {
       console.error('[LOGIN] Supabase Query Error:', error);
