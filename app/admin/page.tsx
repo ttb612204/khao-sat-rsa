@@ -88,13 +88,24 @@ export default function AdminPage() {
 
     // Flatten data for Excel
     const excelData = responses.map(item => {
+      const data = item.data || item; // Handle cases where data is nested or flat
       const row: any = {
-        'Thời gian nộp': dayjs(item.submittedAt).format('DD/MM/YYYY HH:mm:ss'),
+        'Thời gian nộp': dayjs(item.submittedAt || data.submittedAt).format('DD/MM/YYYY HH:mm:ss'),
       };
       
       QUESTIONS.forEach(q => {
-        const val = item[q.id];
-        row[`${q.number}. ${q.label}`] = Array.isArray(val) ? val.join(', ') : val;
+        const val = data[q.id];
+        if (q.id === 'q21' && Array.isArray(val)) {
+          // Special handling for Section 4 table
+          row[`${q.number}. ${q.label}`] = val
+            .filter(v => v.name || v.phone || v.email) // Only include filled ones
+            .map(v => `${v.field}: ${v.name || 'N/A'} (${v.position || 'N/A'}) - SĐT: ${v.phone || 'N/A'} - Email: ${v.email || 'N/A'}`)
+            .join('\n');
+        } else if (Array.isArray(val)) {
+          row[`${q.number}. ${q.label}`] = val.join(', ');
+        } else {
+          row[`${q.number}. ${q.label}`] = val || '';
+        }
       });
 
       return row;
@@ -117,17 +128,22 @@ export default function AdminPage() {
       title: 'Tên Doanh nghiệp',
       dataIndex: 'q1',
       key: 'q1',
-      sorter: (a: any, b: any) => a.q1?.localeCompare(b.q1),
+      sorter: (a: any, b: any) => (a.q1 || '').localeCompare(b.q1 || ''),
     },
     {
-      title: 'Người liên hệ',
+      title: 'Thương hiệu',
       dataIndex: 'q2',
       key: 'q2',
     },
     {
-      title: 'SĐT',
-      dataIndex: 'q4',
-      key: 'q4',
+      title: 'Hội viên chính thức',
+      dataIndex: 'q11',
+      key: 'q11',
+    },
+    {
+      title: 'SĐT đầu mối',
+      dataIndex: 'q18_phone',
+      key: 'q18_phone',
     },
     {
       title: 'Thời gian gửi',
