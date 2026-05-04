@@ -4,22 +4,30 @@ import { supabase } from '@/utils/supabase';
 // LẤY DANH SÁCH TOÀN BỘ CÂU TRẢ LỜI TỪ SUPABASE
 export async function GET() {
   try {
+    console.log('Fetching responses from Supabase...');
     const { data, error } = await supabase
       .from('responses')
-      .select('*')
-      .order('submitted_at', { ascending: false });
+      .select('*');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase GET error:', error);
+      throw error;
+    }
+
+    console.log('Supabase returned:', data?.length, 'items');
+
+    if (!data) return NextResponse.json([], { status: 200 });
 
     // Map lại cấu hình để admin page dễ đọc (giải nén cột data)
     const formattedData = data.map(item => ({
-      ...item.data,
+      ...(item.data || {}),
       id: item.id,
-      submittedAt: item.submitted_at
+      submittedAt: item.submitted_at || item.created_at
     }));
     
     return NextResponse.json(formattedData, { status: 200 });
   } catch (error: any) {
+    console.error('API Responses GET Error:', error);
     return NextResponse.json({ message: 'Lỗi khi lấy dữ liệu: ' + error.message }, { status: 500 });
   }
 }

@@ -9,6 +9,7 @@ export async function POST(request: Request) {
     console.log('Business:', body.q1);
 
     // Chèn dữ liệu vào bảng 'responses' trong Supabase
+    console.log('Attempting to insert into Supabase...');
     const { data, error } = await supabase
       .from('responses')
       .insert([
@@ -18,9 +19,11 @@ export async function POST(request: Request) {
       ]);
 
     if (error) {
-      console.error('Supabase Error:', error);
-      throw error;
+      console.error('Supabase Insert Error:', error);
+      return NextResponse.json({ message: 'Lỗi Supabase: ' + error.message }, { status: 500 });
     }
+
+    console.log('Supabase Insert Success');
 
     return NextResponse.json({ 
       success: true, 
