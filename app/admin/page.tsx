@@ -359,7 +359,7 @@ export default function AdminPage() {
               })}
             </div>
             
-            <Divider orientation="left"><Title level={5} style={{ color: '#1890ff' }}>BẢNG ĐẦU MỐI KẾT NỐI (PHẦN 4)</Title></Divider>
+            <Divider orientation="center"><Title level={5} style={{ color: '#1890ff' }}>BẢNG ĐẦU MỐI KẾT NỐI (PHẦN 4)</Title></Divider>
             <Table
               size="small"
               pagination={false}

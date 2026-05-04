@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, message, FloatButton, ConfigProvider } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -41,18 +41,18 @@ export default function SurveyPage() {
       q20: [],
       q23: [],
       q21: [
-        { key: '1', field: 'Kinh doanh / Phát triển thị trường', name: '', position: '', phone: '', email: '' },
-        { key: '2', field: 'Mua hàng / Chuỗi cung ứng', name: '', position: '', phone: '', email: '' },
-        { key: '3', field: 'Đầu tư / Hợp tác chiến lược / M&A', name: '', position: '', phone: '', email: '' },
-        { key: '4', field: 'Đổi mới sáng tạo / Công nghệ', name: '', position: '', phone: '', email: '' },
-        { key: '5', field: 'Nhân sự / Đào tạo', name: '', position: '', phone: '', email: '' },
-        { key: '6', field: 'Truyền thông / Thương hiệu', name: '', position: '', phone: '', email: '' },
+        { field: 'Kinh doanh / Phát triển thị trường', name: '', position: '', phone: '', email: '' },
+        { field: 'Mua hàng / Chuỗi cung ứng', name: '', position: '', phone: '', email: '' },
+        { field: 'Đầu tư / Hợp tác chiến lược / M&A', name: '', position: '', phone: '', email: '' },
+        { field: 'Đổi mới sáng tạo / Công nghệ', name: '', position: '', phone: '', email: '' },
+        { field: 'Nhân sự / Đào tạo', name: '', position: '', phone: '', email: '' },
+        { field: 'Truyền thông / Thương hiệu', name: '', position: '', phone: '', email: '' },
       ],
     }
   });
 
-  // Autosave & Load Draft
-  const { lastSaved } = useSurveyAutosave(control, reset);
+  // Autosave & Load Draft - Fixed: pass 'watch' and remove 'lastSaved'
+  useSurveyAutosave(watch as any);
 
   const handleSaveManual = () => {
     const data = watch();
@@ -60,7 +60,7 @@ export default function SurveyPage() {
     message.success('Đã lưu bản nháp thành công');
   };
 
-  const onSubmit = async (data: SurveySchemaType) => {
+  const onSubmit: SubmitHandler<SurveySchemaType> = async (data) => {
     setIsSubmitting(true);
     try {
       const response = await fetch('/api/survey', {
@@ -94,7 +94,6 @@ export default function SurveyPage() {
       }}
     >
       <main className="survey-wrapper">
-        {/* Decorative Background Elements */}
         <div className="decor-circle circle-1"></div>
         <div className="decor-circle circle-2"></div>
         
@@ -134,7 +133,6 @@ export default function SurveyPage() {
                                   error={errors[qId as keyof SurveySchemaType]?.message as string} 
                                 />
                                 
-                                {/* Conditional Fields */}
                                 {qId === 'q14' && watch('q14')?.includes('Chỉ liên hệ trực tiếp khi cần') && (
                                   <motion.div 
                                     initial={{ height: 0, opacity: 0 }} 
@@ -196,7 +194,6 @@ export default function SurveyPage() {
           </Form>
 
           <SubmitBar 
-            onSaveDraft={handleSaveManual}
             onReview={() => setIsReviewOpen(true)}
             onSubmit={handleSubmit(onSubmit)}
             isSubmitting={isSubmitting}
@@ -206,7 +203,7 @@ export default function SurveyPage() {
           <ReviewDrawer 
             open={isReviewOpen}
             onClose={() => setIsReviewOpen(false)}
-            data={watch()}
+            data={watch() as any}
             onSubmit={handleSubmit(onSubmit)}
             isSubmitting={isSubmitting}
           />
