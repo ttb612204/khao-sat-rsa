@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import pool from '@/utils/mysql';
+import { supabase } from '@/utils/supabase';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
@@ -8,29 +8,32 @@ export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
 
-    // Tìm kiếm user trong cơ sở dữ liệu MySQL
-    const [rows]: [any[], any] = await pool.execute(
-      'SELECT * FROM users WHERE username = ?',
-      [username]
-    );
+    // Tìm kiếm user trong bảng 'users' của Supabase
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username);
 
-    if (rows.length > 0) {
-      const user = rows[0];
+    if (error) {
+      console.error('Supabase Auth Error:', error);
+      throw error;
+    }
+
+    if (users && users.length > 0) {
+      const user = users[0];
       
-      // Kiểm tra mật khẩu đã mã hóa
+      // Kiểm tra mật khẩu đã mã hóa Bcrypt
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
         // Ghi nhật ký đăng nhập thành công
-        await pool.execute(
-          'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
-          ['LOGIN_SUCCESS', username, 'Đăng nhập vào hệ thống quản trị']
-        );
+        await supabase.from('audit_logs').insert([
+          { action: 'LOGIN_SUCCESS', username, details: 'Đăng nhập vào hệ thống (Cloud)' }
+        ]);
 
-        // Đăng nhập thành công
         const response = NextResponse.json({ success: true });
         
-        // Tạo một Token phiên làm việc bảo mật (HMAC)
+        // Tạo Token phiên làm việc bảo mật
         const secret = process.env.AUTH_SECRET || 'default_secret_key_123';
         const sessionToken = crypto
           .createHmac('sha256', secret)
@@ -42,7 +45,7 @@ export async function POST(request: Request) {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 60 * 60, // 1 giờ (3600 giây)
+          maxAge: 60 * 60, // 1 giờ
           path: '/',
         });
 
@@ -51,12 +54,11 @@ export async function POST(request: Request) {
     }
 
     // Ghi nhật ký đăng nhập thất bại
-    await pool.execute(
-      'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
-      ['LOGIN_FAILED', username || 'unknown', 'Thử đăng nhập sai mật khẩu']
-    );
+    await supabase.from('audit_logs').insert([
+      { action: 'LOGIN_FAILED', username: username || 'unknown', details: 'Thử đăng nhập sai mật khẩu' }
+    ]);
 
-    // Thêm khoảng trễ để chống Brute Force
+    // Chống Brute Force
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     return NextResponse.json(

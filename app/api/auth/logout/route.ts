@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import pool from '@/utils/mysql';
+import { supabase } from '@/utils/supabase';
 
 export async function POST() {
   // Ghi nhật ký đăng xuất
   try {
-    await pool.execute(
-      'INSERT INTO audit_logs (action, username, details) VALUES (?, ?, ?)',
-      ['LOGOUT', 'admin', 'Người dùng đăng xuất khỏi hệ thống']
-    );
+    await supabase.from('audit_logs').insert([
+      { action: 'LOGOUT', username: 'admin', details: 'Người dùng đăng xuất khỏi hệ thống' }
+    ]);
   } catch (e) {
     console.error('Audit Log Error:', e);
   }
