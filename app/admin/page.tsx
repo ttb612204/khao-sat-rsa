@@ -29,7 +29,8 @@ import {
   DashboardOutlined,
   TeamOutlined,
   CalendarOutlined,
-  HomeOutlined
+  HomeOutlined,
+  OrderedListOutlined
 } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -223,6 +224,7 @@ export default function AdminPage() {
             </div>
           </Space>
           <Space>
+            <Button icon={<OrderedListOutlined />} onClick={() => router.push('/admin/questions')}>Quản lý câu hỏi</Button>
             <Button icon={<HomeOutlined />} onClick={() => router.push('/')}>Trang chủ</Button>
             <Button danger icon={<LogoutOutlined />} onClick={handleLogout}>Đăng xuất</Button>
           </Space>
