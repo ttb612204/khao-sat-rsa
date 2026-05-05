@@ -17,7 +17,6 @@ import QuestionField from '@/components/survey/QuestionField';
 import SurveyHeader from '@/components/survey/SurveyHeader';
 import SubmitBar from '@/components/survey/SubmitBar';
 import ReviewDrawer from '@/components/survey/ReviewDrawer';
-import ContactTableSection from '@/components/survey/ContactTableSection';
 
 export default function SurveyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
