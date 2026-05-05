@@ -342,12 +342,14 @@ export default function QuestionsManagement() {
       width: 120,
       render: (_: any, record: any) => (
         <Space>
-          <Button 
-            icon={<PlusSquareOutlined />} 
-            onClick={() => handleAddSubQuestion(record)} 
-            title="Thêm câu hỏi con"
-            style={{ color: '#52c41a', borderColor: '#52c41a' }}
-          />
+          {record.type === 'info' && (
+            <Button 
+              icon={<PlusSquareOutlined />} 
+              onClick={() => handleAddSubQuestion(record)} 
+              title="Thêm câu hỏi con"
+              style={{ color: '#52c41a', borderColor: '#52c41a' }}
+            />
+          )}
           <Button icon={<EditOutlined />} onClick={() => handleAddEdit(record)} />
           <Popconfirm title="Xóa câu hỏi này?" onConfirm={() => handleDelete(record.id)}>
             <Button icon={<DeleteOutlined />} danger />
