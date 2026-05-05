@@ -52,12 +52,14 @@ export default function SurveyPage() {
           fetch('/api/admin/sections'),
           fetch('/api/admin/questions')
         ]);
-        const secData = await secRes.json();
-        const queData = await queRes.json();
-        setDynamicSections(secData);
-        setDynamicQuestions(queData);
+        const sectionsData = await secRes.json();
+        const questionsData = await queRes.json();
+        setDynamicSections(Array.isArray(sectionsData) ? sectionsData : []);
+        setDynamicQuestions(Array.isArray(questionsData) ? questionsData : []);
       } catch (error) {
         message.error('Không thể tải cấu trúc khảo sát');
+        setDynamicSections([]);
+        setDynamicQuestions([]);
       } finally {
         setLoading(false);
       }
@@ -138,7 +140,7 @@ export default function SurveyPage() {
 
           <Form layout="vertical" className="main-form">
             <AnimatePresence>
-              {dynamicSections.map((section, index) => (
+              {(Array.isArray(dynamicSections) ? dynamicSections : []).map((section, index) => (
                 <motion.div
                   key={section.id}
                   initial={{ opacity: 0, y: 40 }}
@@ -153,7 +155,7 @@ export default function SurveyPage() {
                     description={section.description}
                   >
                     <div className="questions-grid">
-                      {dynamicQuestions
+                      {(Array.isArray(dynamicQuestions) ? dynamicQuestions : [])
                         .filter(q => q.section_id === section.id)
                         .map((q) => (
                           <div key={q.id} className={`question-container ${q.type === 'textarea' || q.type === 'contact_list' ? 'full-width' : ''}`}>
