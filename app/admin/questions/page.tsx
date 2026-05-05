@@ -329,8 +329,7 @@ export default function QuestionsManagement() {
               {record.type === 'contact_list' ? 'DANH SÁCH ĐẦU MỐI' : 
                record.type === 'info' ? 'THÔNG TIN' : 
                record.type === 'textarea' ? 'VĂN BẢN DÀI' : 
-               record.type === 'radio' ? 'CHỌN MỘT' : 
-               record.type === 'checkbox' ? 'CHỌN NHIỀU' : 'DÒNG NGẮN'}
+               record.type === 'select' ? (record.multiple ? 'CHỌN NHIỀU' : 'CHỌN MỘT') : 'DÒNG NGẮN'}
             </Tag>
             {record.required && <Tag color="red">BẮT BUỘC</Tag>}
           </div>
@@ -490,8 +489,7 @@ export default function QuestionsManagement() {
               <Select>
                 <Option value="text">Dòng ngắn (Text)</Option>
                 <Option value="textarea">Văn bản dài (Textarea)</Option>
-                <Option value="radio">Chọn một (Radio)</Option>
-                <Option value="checkbox">Chọn nhiều (Checkbox)</Option>
+                <Option value="select">Lựa chọn (Choice)</Option>
                 <Option value="info">Chỉ hiển thị văn bản (Title/Info)</Option>
                 <Option value="contact_list">Danh sách đầu mối (Contact List)</Option>
               </Select>
@@ -523,7 +521,7 @@ export default function QuestionsManagement() {
           <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
             {({ getFieldValue }) => {
               const type = getFieldValue('type');
-              if (type === 'radio' || type === 'checkbox' || type === 'contact_list') {
+              if (type === 'select' || type === 'contact_list') {
                 return (
                   <Card title={type === 'contact_list' ? "Danh sách các Lĩnh vực/Đầu mối" : "Danh sách lựa chọn"} size="small" style={{ marginBottom: 24, background: '#f8fafc' }}>
                     <Form.List name="options">
@@ -563,9 +561,16 @@ export default function QuestionsManagement() {
               const type = getFieldValue('type');
               if (type !== 'info') {
                 return (
-                  <Form.Item name="required" label="Bắt buộc trả lời" valuePropName="checked">
-                    <Switch checkedChildren="Có" unCheckedChildren="Không" />
-                  </Form.Item>
+                  <>
+                    {type === 'select' && (
+                      <Form.Item name="multiple" label="Cho phép chọn nhiều" valuePropName="checked">
+                        <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                      </Form.Item>
+                    )}
+                    <Form.Item name="required" label="Bắt buộc trả lời" valuePropName="checked">
+                      <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                    </Form.Item>
+                  </>
                 );
               }
               return null;
