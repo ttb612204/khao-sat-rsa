@@ -108,7 +108,11 @@ export default function QuestionsManagement() {
       });
     } else {
       form.resetFields();
-      form.setFieldsValue({ id: `q_${Date.now()}`, order_index: questions.length + 1, options: [] });
+      const maxId = questions.reduce((max, q) => {
+        const num = parseInt(q.id.replace('q', '')) || 0;
+        return num > max ? num : max;
+      }, 0);
+      form.setFieldsValue({ id: `q${maxId + 1}`, order_index: questions.length + 1, options: [] });
       if (sectionId) {
         form.setFieldsValue({ section_id: sectionId });
       }
@@ -122,7 +126,11 @@ export default function QuestionsManagement() {
       sectionForm.setFieldsValue(record);
     } else {
       sectionForm.resetFields();
-      sectionForm.setFieldsValue({ id: `section_${Date.now()}`, order_index: sections.length + 1 });
+      const maxId = sections.reduce((max, s) => {
+        const num = parseInt(s.id.replace('s', '').replace('section_', '')) || 0;
+        return num > max ? num : max;
+      }, 0);
+      sectionForm.setFieldsValue({ id: `s${maxId + 1}`, order_index: sections.length + 1 });
     }
     setIsSectionModalOpen(true);
   };
@@ -134,10 +142,15 @@ export default function QuestionsManagement() {
     const nextSub = children.length + 1;
     const nextNum = `${parentNum}.${nextSub}`;
     
+    const maxId = questions.reduce((max, q) => {
+      const num = parseInt(q.id.replace('q', '')) || 0;
+      return num > max ? num : max;
+    }, 0);
+
     setEditingQuestion(null);
     form.resetFields();
     form.setFieldsValue({ 
-      id: `q_${Date.now()}`, 
+      id: `q${maxId + 1}`, 
       section_id: parentRecord.section_id,
       number: nextNum,
       order_index: parentRecord.order_index + nextSub, // Đặt ngay sau cha
