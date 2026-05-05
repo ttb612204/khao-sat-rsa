@@ -103,7 +103,7 @@ export default function SurveyPage() {
   if (loading) {
     return (
       <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#fcf6f6' }}>
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: '#d32f2f' }} spin />} tip="Đang tải khảo sát..." />
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: '#d32f2f' }} spin />} description="Đang tải khảo sát..." />
       </div>
     );
   }
