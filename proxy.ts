@@ -5,6 +5,14 @@ export default function proxy(request: NextRequest) {
 
   // Protect admin areas and sensitive APIs
   if (path.startsWith('/admin') || path.startsWith('/api/admin') || path === '/api/responses') {
+    // ALLOW GET requests to question/section APIs for public survey use
+    const isPublicGet = request.method === 'GET' && 
+      (path === '/api/admin/questions' || path === '/api/admin/sections');
+
+    if (isPublicGet) {
+      return NextResponse.next();
+    }
+
     const session = request.cookies.get('admin_session');
 
     if (!session || !session.value || session.value.length < 32) {
