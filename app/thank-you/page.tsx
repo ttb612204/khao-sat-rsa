@@ -14,7 +14,7 @@ const ThankYouPage = () => {
         status="success"
         icon={<CheckCircleFilled style={{ color: '#52c41a' }} />}
         title="Cảm ơn bạn đã hoàn thành khảo sát!"
-        subTitle="Thông tin của bạn đã được ghi nhận vào mạng lưới RSA / CLB Sao Đỏ. Chúng tôi sẽ sớm kết nối với doanh nghiệp của bạn."
+        subTitle="Thông tin của bạn đã được ghi nhận vào mạng lưới VABSO / CLB Sao Đỏ. Chúng tôi sẽ sớm kết nối với doanh nghiệp của bạn."
         extra={[
           <Button 
             type="primary" 

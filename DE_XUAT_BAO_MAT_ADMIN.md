@@ -36,7 +36,7 @@ Chúng ta sẽ xây dựng một trang Đăng nhập dành riêng cho người q
 
 ## 4. Lợi ích sau khi nâng cấp
 *   **An tâm tuyệt đối**: Dữ liệu hội viên được bảo vệ bởi "khóa" an toàn, không lo bị rò rỉ thông tin.
-*   **Tính chuyên nghiệp**: Thể hiện sự tôn trọng và cam kết bảo mật thông tin của RSA đối với các doanh nghiệp hội viên.
+*   **Tính chuyên nghiệp**: Thể hiện sự tôn trọng và cam kết bảo mật thông tin của VABSO đối với các doanh nghiệp hội viên.
 *   **Kiểm soát tốt**: Ngăn chặn các hành động xóa dữ liệu ngoài ý muốn từ những người không có thẩm quyền.
 
 ---

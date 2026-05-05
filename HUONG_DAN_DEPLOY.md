@@ -10,24 +10,24 @@ Vercel là nền tảng quản lý của chính đội ngũ tạo ra Next.js, r�
 
 ### Bước 1: Đưa code lên GitHub
 1. Truy cập [github.com](https://github.com) và tạo tài khoản.
-2. Tạo một Repository mới (ví dụ: `khao-sat-rsa`).
+2. Tạo một Repository mới (ví dụ: `khao-sat-vabso`).
 3. Tại thư mục dự án trên máy tính, mở terminal và chạy các lệnh sau:
    ```bash
    git init
    git add .
    git commit -m "Initial commit"
    git branch -M main
-   git remote add origin https://github.com/TEN_TAI_KHOAN/khao-sat-rsa.git
+   git remote add origin https://github.com/TEN_TAI_KHOAN/khao-sat-vabso.git
    git push -u origin main
    ```
 
 ### Bước 2: Kết nối với Vercel
 1. Truy cập [vercel.com](https://vercel.com) và đăng nhập bằng tài khoản GitHub.
 2. Nhấn nút **"Add New"** -> **"Project"**.
-3. Tìm Repository `khao-sat-rsa` và nhấn **"Import"**.
+3. Tìm Repository `khao-sat-vabso` và nhấn **"Import"**.
 4. Tại phần "Environment Variables" (nếu bạn có dùng CSDL sau này), hãy nhập các khóa bí mật vào đây.
 5. Nhấn **"Deploy"**.
-6. Sau khi hoàn tất, bạn sẽ nhận được một đường link (ví dụ: `khao-sat-rsa.vercel.app`).
+6. Sau khi hoàn tất, bạn sẽ nhận được một đường link (ví dụ: `khao-sat-vabso.vercel.app`).
 
 ---
 

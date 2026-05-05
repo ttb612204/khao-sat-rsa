@@ -1,4 +1,4 @@
-# Prompt xây dựng website phiếu khảo sát RSA / CLB Sao Đỏ
+# Prompt xây dựng website phiếu khảo sát VABSO / CLB Sao Đỏ
 
 Nguồn nội dung phiếu khảo sát bám theo file Word người dùng cung cấp: fileciteturn0file0  
 Bản prompt nền trước đó do người dùng dán thêm trong file văn bản: fileciteturn1file0
@@ -71,7 +71,7 @@ Yêu cầu code:
 
 Tôi cần một website biểu mẫu khảo sát doanh nghiệp với tên:
 
-PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN RSA / CLB SAO ĐỎ
+PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN VABSO / CLB SAO ĐỎ
 
 Mô tả nhỏ ngay dưới tiêu đề:
 Áp dụng cho doanh nghiệp hội viên lớn - kết nối đa điểm
@@ -94,7 +94,7 @@ Quy tắc form:
 Dữ liệu nội dung phiếu khảo sát:
 
 TIÊU ĐỀ:
-PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN RSA / CLB SAO ĐỎ
+PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN VABSO / CLB SAO ĐỎ
 
 MÔ TẢ NHỎ:
 Áp dụng cho doanh nghiệp hội viên lớn - kết nối đa điểm
@@ -125,7 +125,7 @@ PHẦN 1. THÔNG TIN DOANH NGHIỆP
 10. Danh sách công ty thành viên / đơn vị trực thuộc / hệ sinh thái (nếu có)
 
 ----------------------------------
-PHẦN 2. HỘI VIÊN CHÍNH THỨC TẠI RSA
+PHẦN 2. HỘI VIÊN CHÍNH THỨC TẠI VABSO
 ----------------------------------
 11. Họ và tên hội viên chính thức (Chủ tịch, CEO hoặc đại diện pháp luật)
 12. Chức danh
@@ -139,7 +139,7 @@ PHẦN 2. HỘI VIÊN CHÍNH THỨC TẠI RSA
 14. Hình thức liên hệ với hội viên chính thức
    - Trực tiếp
    - Qua trợ lý/thư ký
-   - Qua người đại diện tại RSA
+   - Qua người đại diện tại VABSO
    - Chỉ liên hệ trực tiếp khi cần
    => checkbox nhiều lựa chọn
    => nếu chọn “Chỉ liên hệ trực tiếp khi cần” thì hiện thêm ô nhập mô tả trường hợp
@@ -163,7 +163,7 @@ PHẦN 2. HỘI VIÊN CHÍNH THỨC TẠI RSA
    => nếu chọn “Chủ đề khác” thì hiện ô nhập nội dung
 
 ----------------------------------
-PHẦN 3. ĐẦU MỐI LÀM VIỆC VỚI RSA
+PHẦN 3. ĐẦU MỐI LÀM VIỆC VỚI VABSO
 ----------------------------------
 16. Họ tên đầu mối chính (trợ lý, thư ký, chánh văn phòng, giám đốc đối ngoại...)
 17. Chức danh đầu mối chính
@@ -172,7 +172,7 @@ PHẦN 3. ĐẦU MỐI LÀM VIỆC VỚI RSA
    - Email
    - Zalo hoặc phương thức liên hệ khác
 
-19. Vai trò của đầu mối trong doanh nghiệp với RSA
+19. Vai trò của đầu mối trong doanh nghiệp với VABSO
    - Nhận thông tin hoạt động
    - Xác nhận/điều phối lịch tham dự
    - Điều phối liên hệ nội bộ
@@ -221,8 +221,8 @@ Yêu cầu:
 ----------------------------------
 PHẦN 5. NĂNG LỰC, NHU CẦU & XÚC TIẾN NỘI BỘ
 ----------------------------------
-22. Thế mạnh nổi bật doanh nghiệp có thể đóng góp cho mạng lưới RSA
-23. Nhu cầu ưu tiên doanh nghiệp muốn RSA hỗ trợ kết nối
+22. Thế mạnh nổi bật doanh nghiệp có thể đóng góp cho mạng lưới VABSO
+23. Nhu cầu ưu tiên doanh nghiệp muốn VABSO hỗ trợ kết nối
    - Khách hàng mới
    - Nhà cung cấp
    - Đối tác phân phối
@@ -235,7 +235,7 @@ PHẦN 5. NĂNG LỰC, NHU CẦU & XÚC TIẾN NỘI BỘ
    => checkbox nhiều lựa chọn
    => nếu chọn “Chủ đề khác” thì hiện ô nhập thêm
 
-24. Danh mục sản phẩm/dịch vụ/cơ hội hợp tác muốn giới thiệu, ưu tiên kết nối trong mạng lưới hội viên RSA
+24. Danh mục sản phẩm/dịch vụ/cơ hội hợp tác muốn giới thiệu, ưu tiên kết nối trong mạng lưới hội viên VABSO
 
 ==================================================
 5) QUY TẮC RENDER UI

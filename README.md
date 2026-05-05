@@ -1,4 +1,4 @@
-# Website Khảo sát RSA / CLB Sao Đỏ
+# Website Khảo sát VABSO / CLB Sao Đỏ
 
 Website biểu mẫu khảo sát doanh nghiệp chuyên nghiệp được xây dựng bằng Next.js 14, Ant Design và React Hook Form.
 

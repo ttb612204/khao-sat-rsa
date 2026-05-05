@@ -149,7 +149,7 @@ export default function StatisticsPage() {
         <div className="content-inner">
           <div className="analytics-header">
             <div className="header-title-box">
-              <Title level={2}>Báo cáo Phân tích Mạng lưới RSA</Title>
+              <Title level={2}>Báo cáo Phân tích Mạng lưới VABSO</Title>
               <Text type="secondary">Phân tích chuyên sâu dữ liệu khảo sát và khả năng kết nối của hội viên VABSO</Text>
             </div>
             <div className="header-date-badge">

@@ -1,5 +1,5 @@
-const STORAGE_KEY = 'rsa_survey_draft';
-const STORAGE_VERSION_KEY = 'rsa_survey_version';
+const STORAGE_KEY = 'vabso_survey_draft';
+const STORAGE_VERSION_KEY = 'vabso_survey_version';
 const CURRENT_VERSION = '1.0.5'; // Tăng version mỗi khi thay đổi cấu trúc form
 
 export const saveDraft = (data: any) => {

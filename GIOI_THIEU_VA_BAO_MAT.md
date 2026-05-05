@@ -1,12 +1,12 @@
 # GIỚI THIỆU TỔNG QUAN & BẢO MẬT HỆ THỐNG
-## Phiếu Cập Nhật Thông Tin Hội Viên RSA / CLB Sao Đỏ
+## Phiếu Cập Nhật Thông Tin Hội Viên VABSO / CLB Sao Đỏ
 
-Hệ thống này được thiết kế để hỗ trợ Hội viên RSA cập nhật thông tin một cách nhanh chóng, chuyên nghiệp và đảm bảo an toàn dữ liệu tuyệt đối.
+Hệ thống này được thiết kế để hỗ trợ Hội viên VABSO cập nhật thông tin một cách nhanh chóng, chuyên nghiệp và đảm bảo an toàn dữ liệu tuyệt đối.
 
 ---
 
 ### 1. Giới thiệu chung
-*   **Mục đích**: Hiện đại hóa việc thu thập dữ liệu, giúp mạng lưới RSA kết nối các doanh nghiệp hội viên hiệu quả và chính xác hơn.
+*   **Mục đích**: Hiện đại hóa việc thu thập dữ liệu, giúp mạng lưới VABSO kết nối các doanh nghiệp hội viên hiệu quả và chính xác hơn.
 *   **Trải nghiệm**: Giao diện sang trọng, dễ sử dụng trên cả máy tính và điện thoại. Các câu hỏi được sắp xếp khoa học, giúp người dùng hoàn thành phiếu chỉ trong vài phút.
 *   **Tính năng tiện lợi**:
     *   **Lưu nháp**: Bạn có thể lưu lại những gì đang viết dở và quay lại hoàn thành sau.
