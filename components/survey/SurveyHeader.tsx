@@ -59,7 +59,7 @@ const SurveyHeader: React.FC<SurveyHeaderProps> = ({ control, dynamicQuestions }
             percent={progress} 
             status="active" 
             strokeColor={{ '0%': '#ff4d4f', '100%': '#d32f2f' }}
-            strokeWidth={10}
+            size={[undefined, 10]}
             showInfo={false}
             className="custom-progress"
           />

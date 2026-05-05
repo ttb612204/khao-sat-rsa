@@ -34,3 +34,12 @@ yarn-error.log*
 
 # responses data (don't push your database file to public github)
 responses.json
+
+# setup and internal instructions
+SUPABASE_SETUP.md
+DE_XUAT_BAO_MAT_ADMIN.md
+GIOI_THIEU_VA_BAO_MAT.md
+HUONG_DAN_DEPLOY.md
+prompt_xay_dung_web_khao_sat_RSA_antd.md
+AGENTS.md
+CLAUDE.md

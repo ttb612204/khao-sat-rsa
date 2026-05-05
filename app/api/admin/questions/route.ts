@@ -18,23 +18,33 @@ export async function GET() {
   }
 }
 
-// Thêm hoặc Cập nhật câu hỏi
+// Thêm hoặc Cập nhật câu hỏi (Kèm logic tự động đẩy thứ tự)
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    
+    // Đảm bảo các trường quan trọng có giá trị mặc định nếu thiếu
+    const payload = {
+      ...body,
+      options: Array.isArray(body.options) ? body.options : [],
+      required: !!body.required,
+      order_index: body.order_index || (parseFloat(body.number) * 100)
+    };
+
     const { data, error } = await supabase
       .from('survey_questions')
-      .upsert(body, { onConflict: 'id' })
+      .upsert(payload, { onConflict: 'id' })
       .select();
 
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error: any) {
+    console.error('API Error:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// Xóa câu hỏi
+// Xóa câu hỏi (Kèm logic tự động dồn hàng lên)
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -42,12 +52,23 @@ export async function DELETE(request: Request) {
 
     if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
-    const { error } = await supabase
+    // 1. Lấy thông tin câu hỏi sắp xóa
+    const { data: target } = await supabase
       .from('survey_questions')
-      .delete()
-      .eq('id', id);
+      .select('order_index')
+      .eq('id', id)
+      .single();
 
-    if (error) throw error;
+    if (target) {
+      // 2. Xóa câu hỏi
+      const { error: deleteError } = await supabase
+        .from('survey_questions')
+        .delete()
+        .eq('id', id);
+
+      if (deleteError) throw deleteError;
+
+    }
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

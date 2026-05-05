@@ -2,7 +2,7 @@ export interface Question {
   id: string;
   number: number | string;
   label: string;
-  type: 'textarea' | 'checkbox';
+  type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'info' | 'contact_list';
   options?: string[];
   placeholder?: string;
   helperText?: string;

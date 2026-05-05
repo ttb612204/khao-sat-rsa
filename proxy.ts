@@ -3,8 +3,8 @@ import { NextResponse, NextRequest } from 'next/server';
 export default function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Protect /admin and /api/responses
-  if (path.startsWith('/admin') || path === '/api/responses') {
+  // Protect admin areas and sensitive APIs
+  if (path.startsWith('/admin') || path.startsWith('/api/admin') || path === '/api/responses') {
     const session = request.cookies.get('admin_session');
 
     if (!session || !session.value || session.value.length < 32) {
@@ -22,5 +22,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/responses/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/responses/:path*'],
 };

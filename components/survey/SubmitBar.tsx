@@ -2,36 +2,29 @@
 
 import React from 'react';
 import { Button, Space } from 'antd';
-import { SaveOutlined, SendOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { SaveOutlined, SendOutlined, FileSearchOutlined, EyeOutlined } from '@ant-design/icons';
 
 interface SubmitBarProps {
-  onReview: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
   isDirty?: boolean;
+  previewMode?: boolean;
 }
 
-const SubmitBar: React.FC<SubmitBarProps> = ({ onReview, onSubmit, isSubmitting, isDirty }) => {
+const SubmitBar: React.FC<SubmitBarProps> = ({ onSubmit, isSubmitting, isDirty, previewMode }) => {
   return (
     <div className="submit-bar">
       <Space size="large">
         <Button 
-          icon={<FileSearchOutlined />} 
-          size="large" 
-          onClick={onReview}
-          className="btn-review"
-        >
-          XEM LẠI PHIẾU
-        </Button>
-        <Button 
           type="primary" 
-          icon={<SendOutlined />} 
+          icon={previewMode ? <EyeOutlined /> : <SendOutlined />} 
           size="large" 
           onClick={onSubmit}
           loading={isSubmitting}
           className="btn-submit"
+          disabled={previewMode}
         >
-          GỬI PHIẾU KHẢO SÁT
+          {previewMode ? 'CHẾ ĐỘ XEM TRƯỚC' : 'GỬI PHIẾU KHẢO SÁT'}
         </Button>
       </Space>
 
