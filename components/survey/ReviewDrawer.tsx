@@ -26,7 +26,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubm
       placement="right"
       onClose={onClose}
       open={open}
-      width={720}
+      size="large"
       extra={
         <Space>
           <Button onClick={onClose}>Tiếp tục sửa</Button>
