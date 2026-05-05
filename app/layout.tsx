@@ -6,8 +6,8 @@ import { ConfigProvider } from "antd";
 import viVN from "antd/locale/vi_VN";
 
 export const metadata: Metadata = {
-  title: "Khảo sát Hội viên RSA / CLB Sao Đỏ",
-  description: "Phiếu cập nhật thông tin hội viên RSA / CLB Sao Đỏ dành cho doanh nghiệp lớn",
+  title: "PHIẾU CẬP NHẬT THÔNG TIN HỘI VIÊN VABSO",
+  description: "Hệ thống cập nhật thông tin hội viên chính thức của VABSO",
 };
 
 export default function RootLayout({
