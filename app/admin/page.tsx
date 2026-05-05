@@ -57,12 +57,20 @@ export default function AdminPage() {
         fetch('/api/responses'),
         fetch('/api/admin/questions')
       ]);
+
+      if (resRes.status === 401 || queRes.status === 401) {
+        router.push('/login');
+        return;
+      }
+
       const resData = await resRes.json();
       const queData = await queRes.json();
       setResponses(Array.isArray(resData) ? resData : []);
       setDynamicQuestions(Array.isArray(queData) ? queData : []);
     } catch (error) {
       message.error('Không thể tải dữ liệu');
+      setResponses([]);
+      setDynamicQuestions([]);
     } finally {
       setLoading(false);
     }
@@ -326,7 +334,7 @@ export default function AdminPage() {
             </div>
             <Table 
               columns={columns} 
-              dataSource={filteredData} 
+              dataSource={Array.isArray(filteredData) ? filteredData : []} 
               loading={loading}
               rowKey="id"
               pagination={{ 
@@ -373,7 +381,7 @@ export default function AdminPage() {
             <Divider plain><Text strong style={{ color: '#888' }}>THÔNG TIN CHI TIẾT</Text></Divider>
             
             <div className="detail-grid">
-              {dynamicQuestions.map(q => {
+               {(Array.isArray(dynamicQuestions) ? dynamicQuestions : []).map(q => {
                 const val = selectedResponse.data?.[q.id] || selectedResponse[q.id];
                 if (q.type === 'contact_list') return null;
                 return (
@@ -381,7 +389,7 @@ export default function AdminPage() {
                     <div className="detail-label">{q.number}. {q.label}</div>
                     <div className="detail-value">
                       {Array.isArray(val) 
-                        ? (val.length > 0 ? val.map((v: string) => <Tag key={v} color="processing" className="ans-tag-premium">{v}</Tag>) : '-')
+                        ? (val.length > 0 ? (Array.isArray(val) ? val.map((v: string) => <Tag key={v} color="processing" className="ans-tag-premium">{v}</Tag>) : '-') : '-')
                         : (val || '-')
                       }
                     </div>

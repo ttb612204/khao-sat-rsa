@@ -67,6 +67,11 @@ export default function QuestionsManagement() {
         fetch('/api/admin/sections'),
         fetch('/api/admin/questions')
       ]);
+      if (sectionsRes.status === 401 || questionsRes.status === 401) {
+        router.push('/login');
+        return;
+      }
+
       const sectionsData = await sectionsRes.json();
       const questionsData = await questionsRes.json();
       
@@ -74,6 +79,8 @@ export default function QuestionsManagement() {
       setQuestions(Array.isArray(questionsData) ? questionsData : []);
     } catch (error) {
       message.error('Không thể tải dữ liệu');
+      setSections([]);
+      setQuestions([]);
     } finally {
       setLoading(false);
     }
@@ -383,7 +390,7 @@ export default function QuestionsManagement() {
             </Button>
           </div>
           <AnimatePresence>
-            {sections.map((section, idx) => (
+            {(Array.isArray(sections) ? sections : []).map((section, idx) => (
               <motion.div
                 key={section.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -430,7 +437,7 @@ export default function QuestionsManagement() {
                       onChange: (keys) => setSelectedRowKeys(keys),
                     }}
                     columns={columns} 
-                    dataSource={questions.filter(q => q.section_id === section.id)}
+                    dataSource={(Array.isArray(questions) ? questions : []).filter(q => q.section_id === section.id)}
                     pagination={false}
                     rowKey="id"
                     loading={loading}
