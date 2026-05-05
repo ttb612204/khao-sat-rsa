@@ -99,16 +99,30 @@ export default function QuestionsManagement() {
     fetchData();
   }, []);
 
-  const handleAddEdit = (record?: any, sectionId?: string) => {
-    setEditingQuestion(record || null);
+  const handleAddEdit = (record: any = null, sectionId?: string) => {
     if (record) {
-      form.setFieldsValue({
-        ...record,
-        options: Array.isArray(record.options) ? record.options : []
-      });
+      setEditingQuestion(record);
+      form.setFieldsValue(record);
     } else {
+      setEditingQuestion(null);
       form.resetFields();
-      form.setFieldsValue({ id: `q_${Date.now()}`, order_index: questions.length + 1, options: [] });
+      
+      // Tự động sinh ID theo số thứ tự q1, q2, q3...
+      const nextIdNumber = questions.length > 0 
+        ? Math.max(...questions.map(q => {
+            const match = q.id?.match(/^q(\d+)$/);
+            return match ? parseInt(match[1]) : 0;
+          })) + 1 
+        : 1;
+
+      form.setFieldsValue({ 
+        id: `q${nextIdNumber}`, 
+        order_index: questions.length + 1, 
+        options: [],
+        type: 'text',
+        required: true
+      });
+      
       if (sectionId) {
         form.setFieldsValue({ section_id: sectionId });
       }
@@ -127,22 +141,27 @@ export default function QuestionsManagement() {
     setIsSectionModalOpen(true);
   };
 
-  const handleAddSubQuestion = (parentRecord: any) => {
-    // Tìm xem đã có bao nhiêu con rồi để gợi ý số hiệu tiếp theo
-    const parentNum = parentRecord.number.toString();
-    const children = questions.filter(q => q.number.toString().startsWith(parentNum + '.'));
-    const nextSub = children.length + 1;
-    const nextNum = `${parentNum}.${nextSub}`;
-    
+  const handleAddSubQuestion = (parent: any) => {
     setEditingQuestion(null);
     form.resetFields();
+    
+    // Tìm số thứ tự tiếp theo cho ID (vẫn dùng qN chung để dễ quản lý)
+    const nextIdNumber = questions.length > 0 
+      ? Math.max(...questions.map(q => {
+          const match = q.id.match(/^q(\d+)$/);
+          return match ? parseInt(match[1]) : 0;
+        })) + 1 
+      : 1;
+
+    // Tính toán số hiển thị (ví dụ 9.1, 9.2)
+    const subNumber = `${parent.number}.${(questions.filter(q => q.number.startsWith(parent.number + '.')).length + 1)}`;
+    
     form.setFieldsValue({ 
-      id: `q_${Date.now()}`, 
-      section_id: parentRecord.section_id,
-      number: nextNum,
-      order_index: parentRecord.order_index + nextSub, // Đặt ngay sau cha
-      options: [],
-      required: false
+      id: `q${nextIdNumber}`,
+      section_id: parent.section_id,
+      number: subNumber,
+      type: 'text',
+      required: true
     });
     setIsModalOpen(true);
   };
