@@ -328,6 +328,7 @@ export default function QuestionsManagement() {
             <Tag color="orange">
               {record.type === 'contact_list' ? 'DANH SÁCH ĐẦU MỐI' : 
                record.type === 'info' ? 'THÔNG TIN' : 
+               record.type === 'input' ? (record.multiline ? 'VĂN BẢN DÀI' : 'DÒNG NGẮN') :
                record.type === 'textarea' ? 'VĂN BẢN DÀI' : 
                record.type === 'select' ? (record.multiple ? 'CHỌN NHIỀU' : 'CHỌN MỘT') : 'DÒNG NGẮN'}
             </Tag>
@@ -489,8 +490,7 @@ export default function QuestionsManagement() {
             </Form.Item>
             <Form.Item name="type" label="Loại câu hỏi" rules={[{ required: true }]}>
               <Select>
-                <Option value="text">Dòng ngắn (Text)</Option>
-                <Option value="textarea">Văn bản dài (Textarea)</Option>
+                <Option value="input">Nhập liệu (Input)</Option>
                 <Option value="select">Lựa chọn (Choice)</Option>
                 <Option value="info">Chỉ hiển thị văn bản (Title/Info)</Option>
                 <Option value="contact_list">Danh sách đầu mối (Contact List)</Option>
@@ -564,6 +564,11 @@ export default function QuestionsManagement() {
               if (type !== 'info') {
                 return (
                   <>
+                    {type === 'input' && (
+                      <Form.Item name="multiline" label="Cho phép nhập nhiều dòng" valuePropName="checked">
+                        <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                      </Form.Item>
+                    )}
                     {type === 'select' && (
                       <Form.Item name="multiple" label="Cho phép chọn nhiều" valuePropName="checked">
                         <Switch checkedChildren="Có" unCheckedChildren="Không" />

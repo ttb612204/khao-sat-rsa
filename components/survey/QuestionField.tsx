@@ -139,13 +139,22 @@ const QuestionField: React.FC<QuestionFieldProps> = ({ question, control, error 
                 </Radio.Group>
               );
             }
-            if (type === 'textarea') {
+            if (type === 'textarea' || (type === 'input' && question.multiline)) {
               return (
                 <TextArea
                   {...field}
                   placeholder={placeholder || "Nhập nội dung..."}
                   autoSize={{ minRows: 3, maxRows: 8 }}
                   className="custom-textarea"
+                />
+              );
+            }
+            if (type === 'input' || type === 'text') {
+              return (
+                <Input
+                  {...field}
+                  placeholder={placeholder || "Nhập câu trả lời..."}
+                  className="custom-input"
                 />
               );
             }
