@@ -22,10 +22,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    // Loại bỏ các trường không có trong DB để tránh lỗi
+    const { multiple, ...payload } = body;
     
-    // Đảm bảo các trường quan trọng có giá trị mặc định nếu thiếu
-    const payload = {
-      ...body,
+    const finalPayload = {
+      ...payload,
       options: Array.isArray(body.options) ? body.options : [],
       required: !!body.required,
       order_index: body.order_index || (parseFloat(body.number) * 100)
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase
       .from('survey_questions')
-      .upsert(payload, { onConflict: 'id' })
+      .upsert(finalPayload, { onConflict: 'id' })
       .select();
 
     if (error) throw error;

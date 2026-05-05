@@ -157,6 +157,8 @@ const QuestionField: React.FC<QuestionFieldProps> = ({ question, control, error 
                 {...field}
                 placeholder={placeholder || "Nhập câu trả lời..."}
                 className="custom-input"
+                maxLength={255}
+                showCount
               />
             );
           }}
