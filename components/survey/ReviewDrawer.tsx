@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Drawer, Button, Typography, Divider, Tag, Space } from 'antd';
-import { QUESTIONS } from '@/constants/survey';
 import { FileSearchOutlined, SendOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -13,9 +12,10 @@ interface ReviewDrawerProps {
   data: any;
   onSubmit: () => void;
   isSubmitting: boolean;
+  dynamicQuestions: any[];
 }
 
-const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubmit, isSubmitting }) => {
+const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubmit, isSubmitting, dynamicQuestions }) => {
   return (
     <Drawer
       title={
@@ -37,7 +37,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubm
       }
     >
       <div className="review-content">
-        {QUESTIONS.map((q) => {
+        {(dynamicQuestions || []).map((q) => {
           const value = data[q.id];
           if (q.id === 'q21') return null;
 
@@ -75,18 +75,9 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = ({ open, onClose, data, onSubm
       </div>
 
       <style jsx>{`
-        .review-item {
-          margin-bottom: 20px;
-        }
-        .review-q {
-          display: block;
-          margin-bottom: 8px;
-          color: #555;
-        }
-        .review-ans {
-          padding-left: 12px;
-          border-left: 3px solid #eee;
-        }
+        .review-item { margin-bottom: 20px; }
+        .review-q { display: block; margin-bottom: 8px; color: #555; }
+        .review-ans { padding-left: 12px; border-left: 3px solid #eee; }
       `}</style>
     </Drawer>
   );
