@@ -114,23 +114,26 @@ const QuestionField: React.FC<QuestionFieldProps> = ({ question, control, error 
                 </div>
               );
             }
-            if (type === 'select' || type === 'checkbox' || type === 'radio') {
-              const isMultiple = type === 'checkbox' || (type === 'select' && question.multiple);
-              
-              if (isMultiple) {
-                return (
-                  <Checkbox.Group {...field} className="custom-checkbox-group">
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {options?.map((opt: string, i: number) => (
-                        <Checkbox key={i} value={opt}>{opt}</Checkbox>
-                      ))}
-                    </div>
-                  </Checkbox.Group>
-                );
-              }
-              
+            if (type === 'checkbox') {
               return (
-                <Radio.Group {...field} className="custom-radio-group">
+                <Checkbox.Group
+                  {...field}
+                  className="custom-checkbox-group"
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {options?.map((opt: string, i: number) => (
+                      <Checkbox key={i} value={opt}>{opt}</Checkbox>
+                    ))}
+                  </div>
+                </Checkbox.Group>
+              );
+            }
+            if (type === 'radio') {
+              return (
+                <Radio.Group
+                  {...field}
+                  className="custom-radio-group"
+                >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {options?.map((opt: string, i: number) => (
                       <Radio key={i} value={opt}>{opt}</Radio>
@@ -139,22 +142,13 @@ const QuestionField: React.FC<QuestionFieldProps> = ({ question, control, error 
                 </Radio.Group>
               );
             }
-            if (type === 'textarea' || (type === 'input' && question.multiline)) {
+            if (type === 'textarea') {
               return (
                 <TextArea
                   {...field}
                   placeholder={placeholder || "Nhập nội dung..."}
                   autoSize={{ minRows: 3, maxRows: 8 }}
                   className="custom-textarea"
-                />
-              );
-            }
-            if (type === 'input' || type === 'text') {
-              return (
-                <Input
-                  {...field}
-                  placeholder={placeholder || "Nhập câu trả lời..."}
-                  className="custom-input"
                 />
               );
             }

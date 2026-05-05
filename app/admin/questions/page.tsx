@@ -108,11 +108,7 @@ export default function QuestionsManagement() {
       });
     } else {
       form.resetFields();
-      const maxId = questions.reduce((max, q) => {
-        const num = parseInt(q.id.replace('q', '')) || 0;
-        return num > max ? num : max;
-      }, 0);
-      form.setFieldsValue({ id: `q${maxId + 1}`, order_index: questions.length + 1, options: [] });
+      form.setFieldsValue({ id: `q_${Date.now()}`, order_index: questions.length + 1, options: [] });
       if (sectionId) {
         form.setFieldsValue({ section_id: sectionId });
       }
@@ -126,11 +122,7 @@ export default function QuestionsManagement() {
       sectionForm.setFieldsValue(record);
     } else {
       sectionForm.resetFields();
-      const maxId = sections.reduce((max, s) => {
-        const num = parseInt(s.id.replace('s', '').replace('section_', '')) || 0;
-        return num > max ? num : max;
-      }, 0);
-      sectionForm.setFieldsValue({ id: `s${maxId + 1}`, order_index: sections.length + 1 });
+      sectionForm.setFieldsValue({ id: `section_${Date.now()}`, order_index: sections.length + 1 });
     }
     setIsSectionModalOpen(true);
   };
@@ -142,15 +134,10 @@ export default function QuestionsManagement() {
     const nextSub = children.length + 1;
     const nextNum = `${parentNum}.${nextSub}`;
     
-    const maxId = questions.reduce((max, q) => {
-      const num = parseInt(q.id.replace('q', '')) || 0;
-      return num > max ? num : max;
-    }, 0);
-
     setEditingQuestion(null);
     form.resetFields();
     form.setFieldsValue({ 
-      id: `q${maxId + 1}`, 
+      id: `q_${Date.now()}`, 
       section_id: parentRecord.section_id,
       number: nextNum,
       order_index: parentRecord.order_index + nextSub, // Đặt ngay sau cha
@@ -341,9 +328,9 @@ export default function QuestionsManagement() {
             <Tag color="orange">
               {record.type === 'contact_list' ? 'DANH SÁCH ĐẦU MỐI' : 
                record.type === 'info' ? 'THÔNG TIN' : 
-               record.type === 'input' ? (record.multiline ? 'VĂN BẢN DÀI' : 'DÒNG NGẮN') :
                record.type === 'textarea' ? 'VĂN BẢN DÀI' : 
-               record.type === 'select' ? (record.multiple ? 'CHỌN NHIỀU' : 'CHỌN MỘT') : 'DÒNG NGẮN'}
+               record.type === 'radio' ? 'CHỌN MỘT' : 
+               record.type === 'checkbox' ? 'CHỌN NHIỀU' : 'DÒNG NGẮN'}
             </Tag>
             {record.required && <Tag color="red">BẮT BUỘC</Tag>}
           </div>
@@ -503,8 +490,10 @@ export default function QuestionsManagement() {
             </Form.Item>
             <Form.Item name="type" label="Loại câu hỏi" rules={[{ required: true }]}>
               <Select>
-                <Option value="input">Nhập liệu (Input)</Option>
-                <Option value="select">Lựa chọn (Choice)</Option>
+                <Option value="text">Dòng ngắn (Text)</Option>
+                <Option value="textarea">Văn bản dài (Textarea)</Option>
+                <Option value="radio">Chọn một (Radio)</Option>
+                <Option value="checkbox">Chọn nhiều (Checkbox)</Option>
                 <Option value="info">Chỉ hiển thị văn bản (Title/Info)</Option>
                 <Option value="contact_list">Danh sách đầu mối (Contact List)</Option>
               </Select>
@@ -536,7 +525,7 @@ export default function QuestionsManagement() {
           <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
             {({ getFieldValue }) => {
               const type = getFieldValue('type');
-              if (type === 'select' || type === 'contact_list') {
+              if (type === 'radio' || type === 'checkbox' || type === 'contact_list') {
                 return (
                   <Card title={type === 'contact_list' ? "Danh sách các Lĩnh vực/Đầu mối" : "Danh sách lựa chọn"} size="small" style={{ marginBottom: 24, background: '#f8fafc' }}>
                     <Form.List name="options">
@@ -576,21 +565,9 @@ export default function QuestionsManagement() {
               const type = getFieldValue('type');
               if (type !== 'info') {
                 return (
-                  <>
-                    {type === 'input' && (
-                      <Form.Item name="multiline" label="Cho phép nhập nhiều dòng" valuePropName="checked">
-                        <Switch checkedChildren="Có" unCheckedChildren="Không" />
-                      </Form.Item>
-                    )}
-                    {type === 'select' && (
-                      <Form.Item name="multiple" label="Cho phép chọn nhiều" valuePropName="checked">
-                        <Switch checkedChildren="Có" unCheckedChildren="Không" />
-                      </Form.Item>
-                    )}
-                    <Form.Item name="required" label="Bắt buộc trả lời" valuePropName="checked">
-                      <Switch checkedChildren="Có" unCheckedChildren="Không" />
-                    </Form.Item>
-                  </>
+                  <Form.Item name="required" label="Bắt buộc trả lời" valuePropName="checked">
+                    <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                  </Form.Item>
                 );
               }
               return null;

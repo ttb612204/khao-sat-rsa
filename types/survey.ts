@@ -2,13 +2,11 @@ export interface Question {
   id: string;
   number: number | string;
   label: string;
-  type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'info' | 'contact_list' | 'select' | 'input';
+  type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'info' | 'contact_list';
   options?: string[];
   placeholder?: string;
   helperText?: string;
   required?: boolean;
-  multiple?: boolean;
-  multiline?: boolean;
 }
 
 export interface Section {
